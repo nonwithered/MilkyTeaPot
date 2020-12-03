@@ -1,0 +1,11 @@
+[package]
+name = "milk_powder"
+version = "0.1.0"
+authors = ["NonWither <1023001754@qq.com>"]
+edition = "2018"
+
+[lib] 
+name = "milk_powder"
+crate-type = ["rlib", "staticlib", "cdylib"]
+
+[dependencies]
