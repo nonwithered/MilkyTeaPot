@@ -1,7 +1,7 @@
 [package]
 name = "milk_powder"
 version = "0.1.0"
-authors = ["NonWither <1023001754@qq.com>"]
+authors = ["milk_powder"]
 edition = "2018"
 
 [lib] 

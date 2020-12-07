@@ -73,315 +73,315 @@ void Midi_Dump(const struct Midi_t *midi, void (*callback)(const uint8_t *bytes,
 
 #ifdef __cplusplus
 
-#ifndef NDEBUG
 #include <cassert>
-#endif // ifndef NDEBUG
 
 class Sysex {
 
 private:
-    const Sysex_t *sysex_;
+  const Sysex_t *sysex_;
 
 private:
-    Sysex(const Sysex_t *sysex) : sysex_(sysex) {}
+  Sysex(const Sysex_t *sysex)
+  : sysex_(sysex) {
+    assert(sysex_ != nullptr);
+  }
 
-    Sysex(const Sysex &) = delete;
+  Sysex(const Sysex &) = delete;
 
-    Sysex &operator=(const Sysex &);
+  Sysex &operator=(const Sysex &);
 
-    Sysex &operator=(Sysex &&);
+  Sysex &operator=(Sysex &&);
 
 public:
-    Sysex(Sysex &&sysex) : sysex_(sysex.sysex_) {
-        sysex.sysex_ = nullptr;
-    }
+  Sysex(Sysex &&sysex)
+  : Sysex(sysex.sysex_) {
+    sysex.sysex_ = nullptr;
+  }
 
-    ~Sysex() = default;
+  ~Sysex() = default;
 
-    uint32_t GetDelta() const {
-        return Sysex_GetDelta(sysex_);
-    }
+  uint32_t GetDelta() const {
+    return Sysex_GetDelta(sysex_);
+  }
 
-    uint8_t GetMode() const {
-        return Sysex_GetArgc(sysex_);
-    }
+  uint8_t GetMode() const {
+    return Sysex_GetArgc(sysex_);
+  }
 
-    void GetArgv(uint8_t *argv) const {
-        Sysex_GetArgv(sysex_, argv);
-    }
+  void GetArgv(uint8_t *argv) const {
+    Sysex_GetArgv(sysex_, argv);
+  }
 
-    friend class SysexPackets;
+  friend class SysexPackets;
 };
 
 class SysexPackets {
 
 private:
-    SysexPackets_t *sysex_packets_;
+  SysexPackets_t *sysex_packets_;
 
-#ifndef NDEBUG
-    const bool mut_;
-#endif // ifndef NDEBUG
+  const bool mut_;
 
 private:
-    SysexPackets(SysexPackets_t *sysex_packets) : sysex_packets_(sysex_packets)
-#ifndef NDEBUG
-    , mut_(false)
-#endif // ifndef NDEBUG
-    {}
+  SysexPackets(SysexPackets_t *sysex_packets, bool mut = false)
+  : sysex_packets_(sysex_packets)
+  , mut_(mut) {
+    assert(sysex_packets_ != nullptr);
+  }
 
-    SysexPackets(const SysexPackets &) = delete;
+  SysexPackets(const SysexPackets &) = delete;
 
-    SysexPackets &operator=(const SysexPackets &);
-    
-    SysexPackets &operator=(SysexPackets &&);
+  SysexPackets &operator=(const SysexPackets &);
+  
+  SysexPackets &operator=(SysexPackets &&);
 
 public:
-    SysexPackets() : sysex_packets_(SysexPackets_Create())
-#ifndef NDEBUG
-    , mut_(true)
-#endif // ifndef NDEBUG
-    {}
+  SysexPackets()
+  : SysexPackets(SysexPackets_Create(), true) {
+  }
 
-    SysexPackets(SysexPackets &&sysex_packets) : sysex_packets_(sysex_packets.sysex_packets_)
-#ifndef NDEBUG
-    , mut_(sysex_packets.mut_)
-#endif // ifndef NDEBUG 
-    {
-        sysex_packets.sysex_packets_ = nullptr;
-    }
+  SysexPackets(SysexPackets &&sysex_packets)
+  : SysexPackets(sysex_packets.sysex_packets_, sysex_packets.mut_) {
+    sysex_packets.sysex_packets_ = nullptr;
+  }
 
-#ifndef NDEBUG
-    ~SysexPackets() {
-        if (mut_) {
-            assert(sysex_packets_ == nullptr);
-        }
-    }
-#endif // ifndef NDEBUG
+  ~SysexPackets() {
+    assert(!mut_ || sysex_packets_ == nullptr);
+  }
 
-    uint32_t GetSize() const {
-        return SysexPackets_GetSize(sysex_packets_);
-    }
+  uint32_t GetSize() const {
+    return SysexPackets_GetSize(sysex_packets_);
+  }
 
-    Sysex GetSysex(uint32_t index) const {
-        return Sysex(SysexPackets_GetSysex(sysex_packets_, index));
-    }
+  Sysex GetSysex(uint32_t index) const {
+    return Sysex(SysexPackets_GetSysex(sysex_packets_, index));
+  }
 
-    void AddSysex(uint32_t delta, uint32_t argc, const uint8_t *argv) {
-        SysexPackets_AddSysex(sysex_packets_, delta, argc, argv);
-    }
+  void AddSysex(uint32_t delta, uint32_t argc, const uint8_t *argv) {
+    assert(mut_);
+    SysexPackets_AddSysex(sysex_packets_, delta, argc, argv);
+  }
 
-    friend class Event;
-    friend class Track;
+  friend class Event;
+  friend class Track;
 };
 
 class Meta {
 
 private:
-    const Meta_t *meta_;
+  const Meta_t *meta_;
 
 private:
-    Meta(const Meta_t *meta) : meta_(meta) {}
+  Meta(const Meta_t *meta)
+  : meta_(meta) {
+    assert(meta_ != nullptr);
+  }
 
-    Meta(const Meta &) = delete;
+  Meta(const Meta &) = delete;
 
-    Meta &operator=(const Meta &);
-    
-    Meta &operator=(Meta &&);
+  Meta &operator=(const Meta &);
+  
+  Meta &operator=(Meta &&);
 
 public:
-    Meta(Meta &&meta) : meta_(meta.meta_) {
-        meta.meta_ = nullptr;
-    }
+  Meta(Meta &&meta)
+  : Meta(meta.meta_) {
+    meta.meta_ = nullptr;
+  }
 
-    ~Meta() = default;
+  ~Meta() = default;
 
-    uint8_t GetMode() const {
-        return Meta_GetMode(meta_);
-    }
+  uint8_t GetMode() const {
+    return Meta_GetMode(meta_);
+  }
 
-    uint32_t GetArgc() const {
-        return Meta_GetArgc(meta_);
-    }
+  uint32_t GetArgc() const {
+    return Meta_GetArgc(meta_);
+  }
 
-    void GetArgv(uint8_t *argv) const {
-        Meta_GetArgv(meta_, argv);
-    }
+  void GetArgv(uint8_t *argv) const {
+    Meta_GetArgv(meta_, argv);
+  }
 
-    friend class Event;
+  friend class Event;
 };
 
 class Event {
 
 private:
-    const Event_t *event_;
+  const Event_t *event_;
 
 private:
-    Event(const Event_t *event) : event_(event) {}
+  Event(const Event_t *event)
+  : event_(event) {
+    assert(event_ != nullptr);
+  }
 
-    Event(const Event &) = delete;
+  Event(const Event &) = delete;
 
-    Event &operator=(const Event &);
-    
-    Event &operator=(Event &&);
+  Event &operator=(const Event &);
+  
+  Event &operator=(Event &&);
 
 public:
-    Event(Event &&event) : event_(event.event_) {
-        event.event_ = nullptr;
-    }
+  Event(Event &&event)
+  : Event(event.event_) {
+    event.event_ = nullptr;
+  }
 
-    ~Event() = default;
+  ~Event() = default;
 
-    uint32_t GetDelta() const {
-        return Event_GetDelta(event_);
-    }
+  uint32_t GetDelta() const {
+    return Event_GetDelta(event_);
+  }
 
-    uint8_t GetMode() const {
-        return Event_GetMode(event_);
-    }
+  uint8_t GetMode() const {
+    return Event_GetMode(event_);
+  }
 
-    uint8_t GetArgs(uint8_t *arg) const {
-        return Event_GetArgs(event_, arg);
-    }
+  uint8_t GetArgs(uint8_t *arg) const {
+    return Event_GetArgs(event_, arg);
+  }
 
-    operator Meta() && {
-        Meta meta(Event_CastMeta(event_));
-        event_ = nullptr;
-        return meta;
-    }
+  operator Meta() && {
+    Meta meta(Event_CastMeta(event_));
+    event_ = nullptr;
+    return meta;
+  }
 
-    operator SysexPackets() && {
-        SysexPackets sysex_packets(const_cast<SysexPackets_t *>(Event_CastSysexPackets(event_)));
-        event_ = nullptr;
-        return sysex_packets;
-    }
+  operator SysexPackets() && {
+    SysexPackets sysex_packets(const_cast<SysexPackets_t *>(Event_CastSysexPackets(event_)));
+    event_ = nullptr;
+    return sysex_packets;
+  }
 
-    friend class Track;
+  friend class Track;
 };
 
 class Track {
 
 private:
-    Track_t *track_;
+  Track_t *track_;
 
-#ifndef NDEBUG
-    const bool mut_;
-#endif // ifndef NDEBUG
+  const bool mut_;
 
 private:
-    Track(Track_t *track) : track_(track)
-#ifndef NDEBUG
-    , mut_(false)
-#endif // ifndef NDEBUG
-    {}
+  Track(Track_t *track, bool mut = false)
+  : track_(track)
+  , mut_(mut) {
+    assert(track_ != nullptr);
+  }
 
-    Track(const Track &) = delete;
+  Track(const Track &) = delete;
 
-    Track &operator=(const Track &);
-    
-    Track &operator=(Track &&);
+  Track &operator=(const Track &);
+  
+  Track &operator=(Track &&);
 
 public:
-    Track() : track_(Track_Create())
-#ifndef NDEBUG
-    , mut_(true)
-#endif // ifndef NDEBUG
-    {}
+  Track()
+  : Track(Track_Create(), true) {
+  }
 
-    Track(Track &&track) : track_(track.track_)
-#ifndef NDEBUG
-    , mut_(track.mut_)
-#endif // ifndef NDEBUG
-    {
-        track.track_ = nullptr;
-    }
+  Track(Track &&track)
+  : Track(track.track_, track.mut_) {
+    track.track_ = nullptr;
+  }
 
-#ifndef NDEBUG
-    ~Track() {
-        if (mut_) {
-            assert(track_ == nullptr);
-        }
-    }
-#endif // ifndef NDEBUG
+  ~Track() {
+    assert(!mut_ || track_ == nullptr);
+  }
 
-    uint32_t GetSize() const {
-        return Track_GetSize(track_);
-    }
+  uint32_t GetSize() const {
+    return Track_GetSize(track_);
+  }
 
-    Event GetEvent(uint32_t index) const {
-        return Event(Track_GetEvent(track_, index));
-    }
+  Event GetEvent(uint32_t index) const {
+    return Event(Track_GetEvent(track_, index));
+  }
 
-    void AddEvent(uint32_t delta, uint8_t mode, uint8_t arg0, uint8_t arg1) {
-        Track_AddEvent(track_, delta, mode, arg0, arg1);
-    }
+  void AddEvent(uint32_t delta, uint8_t mode, uint8_t arg0, uint8_t arg1) {
+    assert(mut_);
+    Track_AddEvent(track_, delta, mode, arg0, arg1);
+  }
 
-    void AddMeta(uint32_t delta, uint8_t mode, uint8_t argc, const uint8_t *argv) {
-        Track_AddMeta(track_, delta, mode, argc, argv);
-    }
+  void AddMeta(uint32_t delta, uint8_t mode, uint8_t argc, const uint8_t *argv) {
+    assert(mut_);
+    Track_AddMeta(track_, delta, mode, argc, argv);
+  }
 
-    void AddSysexPackets(SysexPackets &&sysex_packets) {
-        Track_AddSysexPackets(track_, sysex_packets.sysex_packets_);
-        sysex_packets.sysex_packets_ = nullptr;
-    }
+  void AddSysexPackets(SysexPackets &&sysex_packets) {
+    assert(mut_);
+    assert(sysex_packets.mut_ && sysex_packets.sysex_packets_ != nullptr);
+    Track_AddSysexPackets(track_, sysex_packets.sysex_packets_);
+    sysex_packets.sysex_packets_ = nullptr;
+  }
 
-    friend class Midi;
+  friend class Midi;
 };
 
 class Midi {
 
 public:
-    static Midi Parse(const uint8_t *bytes, uint32_t length) {
-        return Midi(const_cast<Midi_t *>(Midi_Parse(bytes, length)));
-    }
+  static Midi Parse(const uint8_t *bytes, uint32_t length) {
+    return Midi(const_cast<Midi_t *>(Midi_Parse(bytes, length)));
+  }
 
 public:
-    void Dump(void (*callback)(const uint8_t *bytes, uint32_t length)) const {
-        Midi_Dump(midi_, callback);
-    }
+  void Dump(void (*callback)(const uint8_t *bytes, uint32_t length)) const {
+    Midi_Dump(midi_, callback);
+  }
 
 private:
-    Midi_t *midi_;
+  Midi_t *midi_;
 
 private:
-    Midi(Midi_t *midi) : midi_(midi) {}
+  Midi(Midi_t *midi)
+  : midi_(midi) {
+    assert(midi_ != nullptr);
+  }
 
-    Midi(const Midi &) = delete;
+  Midi(const Midi &) = delete;
 
-    Midi &operator=(const Midi &);
-    
-    Midi &operator=(Midi &&);
-    
+  Midi &operator=(const Midi &);
+  
+  Midi &operator=(Midi &&);
+  
 public:
-    Midi(uint16_t division) : midi_(Midi_Create(division)) {}
+  Midi(uint16_t division)
+  : Midi(Midi_Create(division)) {
+  }
 
-    Midi(Midi &&midi) : midi_(midi.midi_) {
-        midi.midi_ = nullptr;
-    }
+  Midi(Midi &&midi)
+  : Midi(midi.midi_) {
+    midi.midi_ = nullptr;
+  }
 
-    ~Midi() {
-        Midi_Destroy(midi_);
-    }
+  ~Midi() {
+    Midi_Destroy(midi_);
+  }
 
-    uint16_t GetFormat() const {
-        return Midi_GetFormat(midi_);
-    }
+  uint16_t GetFormat() const {
+    return Midi_GetFormat(midi_);
+  }
 
-    uint16_t GetNtrks() const {
-        return Midi_GetNtrks(midi_);
-    }
+  uint16_t GetNtrks() const {
+    return Midi_GetNtrks(midi_);
+  }
 
-    uint16_t GetDivision() const {
-        return Midi_GetDivision(midi_);
-    }
+  uint16_t GetDivision() const {
+    return Midi_GetDivision(midi_);
+  }
 
-    Track GetTrack(uint16_t index) const {
-        return Track(const_cast<Track_t *>(Midi_GetTrack(midi_, index)));
-    }
+  Track GetTrack(uint16_t index) const {
+    return Track(const_cast<Track_t *>(Midi_GetTrack(midi_, index)));
+  }
 
-    void AddTrack(Track &&track) {
-        Midi_AddTrack(midi_, track.track_);
-        track.track_ = nullptr;
-    }
+  void AddTrack(Track &&track) {
+    assert(track.mut_ && track.track_ != nullptr);
+    Midi_AddTrack(midi_, track.track_);
+    track.track_ = nullptr;
+  }
 };
 
 #endif // ifdef __cplusplus
