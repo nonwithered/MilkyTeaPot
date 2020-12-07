@@ -1,3 +1,8 @@
-!*
-target
-Cargo.lock
+*
+!.gitignore
+!LICENSE
+!Cargo.toml
+!include
+!src
+!test
+!demo

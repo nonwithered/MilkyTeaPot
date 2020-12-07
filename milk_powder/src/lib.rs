@@ -204,7 +204,7 @@ pub extern "C" fn Midi_Destroy(midi_ptr: *const Midi) {
 
 #[no_mangle]
 pub extern "C" fn Midi_Create(division: u16) -> *mut Midi {
-    Box::into_raw(Box::new(Midi::new(0x0001u16, 0x0001u16, division, Vec::new())))
+    Box::into_raw(Box::new(Midi::new(0x0001u16, 0x0000u16, division, Vec::new())))
 }
 
 #[no_mangle]
