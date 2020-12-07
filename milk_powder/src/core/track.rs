@@ -3,6 +3,7 @@ use super::meta::Meta;
 use super::sysex::SysexPackets;
 
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct Track {
     events: Vec<Event>,
 }

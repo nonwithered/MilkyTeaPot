@@ -196,7 +196,7 @@ pub extern "C" fn Sysex_GetArgv(sysex_ptr: *const Sysex, argv_ptr: *mut u8) {
 #[no_mangle]
 pub extern "C" fn Midi_Destroy(midi_ptr: *const Midi) {
     if let Some(midi) = unsafe { midi_ptr.as_ref() } {
-        // unsafe { std::ptr::drop_in_place(midi_ptr); }
+        unsafe { std::ptr::drop_in_place(midi_ptr as *mut Midi); }
         let layout = std::alloc::Layout::for_value(midi);
         unsafe { std::alloc::dealloc(midi_ptr as *mut u8, layout); }
     }
@@ -205,6 +205,14 @@ pub extern "C" fn Midi_Destroy(midi_ptr: *const Midi) {
 #[no_mangle]
 pub extern "C" fn Midi_Create(division: u16) -> *mut Midi {
     Box::into_raw(Box::new(Midi::new(0x0001u16, 0x0000u16, division, Vec::new())))
+}
+
+#[no_mangle]
+pub extern "C" fn Midi_Clone(midi_ptr: *const Midi) -> *mut Midi {
+    if let Some(midi) = unsafe { midi_ptr.as_ref() } {
+        return Box::into_raw(Box::new(midi.clone()))
+    }
+    std::ptr::null_mut()
 }
 
 #[no_mangle]

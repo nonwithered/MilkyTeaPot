@@ -1,4 +1,5 @@
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct Meta {
     mode: u8,
     args: Vec<u8>,

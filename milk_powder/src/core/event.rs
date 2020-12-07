@@ -2,15 +2,18 @@ use super::meta::Meta;
 use super::sysex::SysexPackets;
 
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct Event {
     delta: VarLen,
     msg: Msg,
 }
 
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct VarLen(pub usize);
 
 #[derive(Debug)]
+#[derive(Clone)]
 enum Msg {
     Event {
         mode: u8,

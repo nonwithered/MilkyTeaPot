@@ -1,6 +1,7 @@
 use super::track::Track;
 
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct Midi {
     format: u16,
     ntrks: u16,

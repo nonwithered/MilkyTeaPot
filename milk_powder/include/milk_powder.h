@@ -47,6 +47,7 @@ void Sysex_GetArgv(const struct Sysex_t *sysex, uint8_t *argv);
 void Midi_Destroy(const struct Midi_t *midi);
 
 struct Midi_t *Midi_Create(uint16_t division);
+struct Midi_t *Midi_Clone(const struct Midi_t *midi);
 void Midi_AddTrack(struct Midi_t *midi, struct Track_t *track);
 
 struct Track_t *Track_Create();
@@ -341,8 +342,6 @@ private:
     assert(midi_ != nullptr);
   }
 
-  Midi(const Midi &) = delete;
-
   Midi &operator=(const Midi &);
   
   Midi &operator=(Midi &&);
@@ -350,6 +349,10 @@ private:
 public:
   Midi(uint16_t division)
   : Midi(Midi_Create(division)) {
+  }
+
+  Midi(const Midi &midi)
+  : Midi(Midi_Clone(midi.midi_)) {
   }
 
   Midi(Midi &&midi)

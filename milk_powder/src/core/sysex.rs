@@ -1,11 +1,13 @@
 use super::event::VarLen;
 
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct SysexPackets {
     packets: Vec<Sysex>,
 }
 
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct Sysex {
     delta: VarLen,
     args: Vec<u8>,

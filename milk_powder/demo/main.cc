@@ -54,7 +54,8 @@ int main(int argc, char *argv[]) {
   std::cout << "dump" << std::endl;
   midi.Dump(callback);
   std::cout << "parse" << std::endl;
-  Midi m = Midi::Parse(gBuf, gLen);
+  Midi tmp = Midi::Parse(gBuf, gLen);
+  Midi m = tmp;
   std::cout << "dump" << std::endl;
   m.Dump(callback);
 
