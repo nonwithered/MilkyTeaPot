@@ -68,7 +68,8 @@ void Track_AddSysexPackets(struct Track_t *track, struct SysexPackets_t *sysex_p
 struct SysexPackets_t *SysexPackets_Create();
 void SysexPackets_AddSysex(struct SysexPackets_t *sysex_packets, uint32_t delta, uint32_t argc, const uint8_t *argv);
 
-void Midi_Dump(const struct Midi_t *midi, void (*callback)(void *receiver, const uint8_t *bytes, uint32_t length), void *receiver);
+typedef void (*DumpFunction)(void *receiver, const uint8_t *bytes, uint32_t length);
+void Midi_Dump(const struct Midi_t *midi, DumpFunction callback, void *receiver);
 
 #define NOTE_OFF(channel) ((uint8_t) (0x80 | (channel)))
 #define NOTE_ON(channel) ((uint8_t) (0x90 | (channel)))
@@ -349,7 +350,6 @@ public:
   }
 
 private:
-  using DumpFunction = void (*)(void *, const uint8_t *, uint32_t);
   using DumpReceiver = std::function<void(const uint8_t *, uint32_t)>;
   static void DumpCallback(DumpReceiver &receiver, const uint8_t *bytes, uint32_t length) {
     receiver(bytes, length);
