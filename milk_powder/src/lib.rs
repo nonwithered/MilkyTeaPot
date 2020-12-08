@@ -203,16 +203,101 @@ pub extern "C" fn Midi_Destroy(midi_ptr: *const Midi) {
 }
 
 #[no_mangle]
-pub extern "C" fn Midi_Create(division: u16) -> *mut Midi {
-    Box::into_raw(Box::new(Midi::new(0x0001u16, 0x0000u16, division, Vec::new())))
+pub extern "C" fn Midi_Clone(midi_ptr: *const Midi) -> *mut Midi {
+    if let Some(midi) = unsafe { midi_ptr.as_ref() } {
+        return Box::into_raw(Box::new(midi.clone()));
+    }
+    std::ptr::null_mut()
 }
 
 #[no_mangle]
-pub extern "C" fn Midi_Clone(midi_ptr: *const Midi) -> *mut Midi {
-    if let Some(midi) = unsafe { midi_ptr.as_ref() } {
-        return Box::into_raw(Box::new(midi.clone()))
+pub extern "C" fn Track_Destory(track_ptr: *const Track) {
+    if let Some(track) = unsafe { track_ptr.as_ref() } {
+        unsafe { std::ptr::drop_in_place(track_ptr as *mut Track); }
+        let layout = std::alloc::Layout::for_value(track);
+        unsafe { std::alloc::dealloc(track_ptr as *mut u8, layout); }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn Track_Clone(track_ptr: *const Track) -> *mut Track {
+    if let Some(track) = unsafe { track_ptr.as_ref() } {
+        return Box::into_raw(Box::new(track.clone()));
     }
     std::ptr::null_mut()
+}
+
+#[no_mangle]
+pub extern "C" fn Event_Destory(event_ptr: *const Event) {
+    if let Some(event) = unsafe { event_ptr.as_ref() } {
+        unsafe { std::ptr::drop_in_place(event_ptr as *mut Event); }
+        let layout = std::alloc::Layout::for_value(event);
+        unsafe { std::alloc::dealloc(event_ptr as *mut u8, layout); }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn Event_Clone(event_ptr: *const Event) -> *mut Event {
+    if let Some(event) = unsafe { event_ptr.as_ref() } {
+        return Box::into_raw(Box::new(event.clone()));
+    }
+    std::ptr::null_mut()
+}
+
+#[no_mangle]
+pub extern "C" fn Meta_Destory(meta_ptr: *const Meta) {
+    if let Some(meta) = unsafe { meta_ptr.as_ref() } {
+        unsafe { std::ptr::drop_in_place(meta_ptr as *mut Meta); }
+        let layout = std::alloc::Layout::for_value(meta);
+        unsafe { std::alloc::dealloc(meta_ptr as *mut u8, layout); }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn Meta_Clone(meta_ptr: *const Meta) -> *mut Meta {
+    if let Some(meta) = unsafe { meta_ptr.as_ref() } {
+        return Box::into_raw(Box::new(meta.clone()));
+    }
+    std::ptr::null_mut()
+}
+
+#[no_mangle]
+pub extern "C" fn SysexPackets_Destory(sysex_packets_ptr: *const SysexPackets) {
+    if let Some(sysex_packets) = unsafe { sysex_packets_ptr.as_ref() } {
+        unsafe { std::ptr::drop_in_place(sysex_packets_ptr as *mut SysexPackets); }
+        let layout = std::alloc::Layout::for_value(sysex_packets);
+        unsafe { std::alloc::dealloc(sysex_packets_ptr as *mut u8, layout); }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn SysexPackets_Clone(sysex_packets_ptr: *const SysexPackets) -> *mut SysexPackets {
+    if let Some(sysex_packets) = unsafe { sysex_packets_ptr.as_ref() } {
+        return Box::into_raw(Box::new(sysex_packets.clone()));
+    }
+    std::ptr::null_mut()
+}
+
+#[no_mangle]
+pub extern "C" fn Sysex_Destory(sysex_ptr: *const Sysex) {
+    if let Some(sysex) = unsafe { sysex_ptr.as_ref() } {
+        unsafe { std::ptr::drop_in_place(sysex_ptr as *mut Sysex); }
+        let layout = std::alloc::Layout::for_value(sysex);
+        unsafe { std::alloc::dealloc(sysex_ptr as *mut u8, layout); }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn Sysex_Clone(sysex_ptr: *const Sysex) -> *mut Sysex {
+    if let Some(sysex) = unsafe { sysex_ptr.as_ref() } {
+        return Box::into_raw(Box::new(sysex.clone()));
+    }
+    std::ptr::null_mut()
+}
+
+#[no_mangle]
+pub extern "C" fn Midi_Create(division: u16) -> *mut Midi {
+    Box::into_raw(Box::new(Midi::new(0x0001u16, 0x0000u16, division, Vec::new())))
 }
 
 #[no_mangle]

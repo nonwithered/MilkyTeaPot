@@ -45,9 +45,19 @@ uint32_t Sysex_GetArgc(const struct Sysex_t *sysex);
 void Sysex_GetArgv(const struct Sysex_t *sysex, uint8_t *argv);
 
 void Midi_Destroy(const struct Midi_t *midi);
+struct Midi_t *Midi_Clone(const struct Midi_t *midi);
+void Track_Destory(const struct Track_t *track);
+struct Track_t *Track_Clone(const struct Track_t *track);
+void Event_Destory(const struct Event_t *event);
+struct Event_t *Event_Clone(const struct Event_t *event);
+void Meta_Destory(const struct Meta_t *meta);
+struct Meta_t *Meta_Clone(const struct Meta_t *meta);
+void SysexPackets_Destory(const struct SysexPackets_t *sysex_packets);
+struct SysexPackets_t *SysexPackets_Clone(const struct SysexPackets_t *sysex_packets);
+void Sysex_Destory(const struct Sysex_t *sysexs);
+struct Sysex_t *Sysex_Clone(const struct Sysex_t *sysexs);
 
 struct Midi_t *Midi_Create(uint16_t division);
-struct Midi_t *Midi_Clone(const struct Midi_t *midi);
 void Midi_AddTrack(struct Midi_t *midi, struct Track_t *track);
 
 struct Track_t *Track_Create();
@@ -130,8 +140,6 @@ private:
     assert(sysex_packets_ != nullptr);
   }
 
-  SysexPackets(const SysexPackets &) = delete;
-
   SysexPackets &operator=(const SysexPackets &);
   
   SysexPackets &operator=(SysexPackets &&);
@@ -141,13 +149,19 @@ public:
   : SysexPackets(SysexPackets_Create(), true) {
   }
 
+  SysexPackets(const SysexPackets &sysex_packets)
+  : SysexPackets(SysexPackets_Clone(sysex_packets.sysex_packets_), true) {
+  }
+
   SysexPackets(SysexPackets &&sysex_packets)
   : SysexPackets(sysex_packets.sysex_packets_, sysex_packets.mut_) {
     sysex_packets.sysex_packets_ = nullptr;
   }
 
   ~SysexPackets() {
-    assert(!mut_ || sysex_packets_ == nullptr);
+    if (mut_ && sysex_packets_ != nullptr) {
+      SysexPackets_Destory(sysex_packets_);
+    }
   }
 
   uint32_t GetSize() const {
@@ -273,8 +287,6 @@ private:
     assert(track_ != nullptr);
   }
 
-  Track(const Track &) = delete;
-
   Track &operator=(const Track &);
   
   Track &operator=(Track &&);
@@ -284,13 +296,19 @@ public:
   : Track(Track_Create(), true) {
   }
 
+  Track(const Track &track)
+  : Track(Track_Clone(track.track_), true) {
+  }
+
   Track(Track &&track)
   : Track(track.track_, track.mut_) {
     track.track_ = nullptr;
   }
 
   ~Track() {
-    assert(!mut_ || track_ == nullptr);
+    if (mut_ && track_ != nullptr) {
+      Track_Destory(track_);
+    }
   }
 
   uint32_t GetSize() const {

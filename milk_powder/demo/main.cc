@@ -1,5 +1,6 @@
 #include <milk_powder.h>
 
+#include <cassert>
 #include <iostream>
 #include <utility>
 #include <cstring>
@@ -26,8 +27,6 @@ namespace {
       gLen = 0;
     }
   }
-
-  
 } // namespace
 
 int main(int argc, char *argv[]) {
@@ -50,6 +49,29 @@ int main(int argc, char *argv[]) {
   }
   track.AddSysexPackets(std::move(sysex_packets));
   midi.AddTrack(std::move(track));
+
+  {
+    Track p = midi.GetTrack(0);
+    Track q = p;
+    Track track = q;
+    {
+      Event p = track.GetEvent(1);
+      assert(p.GetMode() == SYSEX);
+      SysexPackets q = std::move(p);
+      SysexPackets sysex_packets = q;
+      track.AddSysexPackets(std::move(sysex_packets));
+    }
+    {
+      Event e = track.GetEvent(0);
+      uint32_t delta = e.GetDelta();
+      uint8_t mode = e.GetMode();
+      assert(mode != SYSEX && mode != META);
+      uint8_t arg0, arg1;
+      arg0 = e.GetArgs(&arg1);
+      track.AddEvent(delta, mode, arg0, arg1);
+    }
+    midi.AddTrack(std::move(track));
+  }
 
   std::cout << "dump" << std::endl;
   midi.Dump(callback);
