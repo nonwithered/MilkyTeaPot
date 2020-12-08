@@ -354,15 +354,15 @@ pub extern "C" fn SysexPackets_AddSysex(sysex_packets_ptr: *mut SysexPackets, de
 }
 
 #[no_mangle]
-pub extern "C" fn Midi_Dump(midi_ptr: *const Midi, callback: unsafe extern "C" fn(bytes_ptr: *const u8, length: u32)) {
+pub extern "C" fn Midi_Dump(midi_ptr: *const Midi, callback: unsafe extern "C" fn(receiver_ptr: *mut u8, bytes_ptr: *const u8, length: u32), receiver_ptr: *mut u8) {
     if let Some(midi) = unsafe { midi_ptr.as_ref() } {
         let bytes = midi.into_bytes();
         let bytes_ptr = bytes.as_ptr();
         let length = bytes.len() as u32;
-        unsafe { callback(bytes_ptr, length); }
+        unsafe { callback(receiver_ptr, bytes_ptr, length); }
     } else {
         let bytes_ptr = std::ptr::null();
         let length = 0u32;
-        unsafe { callback(bytes_ptr, length); }
+        unsafe { callback(receiver_ptr, bytes_ptr, length); }
     }
 }

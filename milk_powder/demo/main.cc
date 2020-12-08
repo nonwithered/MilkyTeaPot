@@ -5,30 +5,6 @@
 #include <utility>
 #include <cstring>
 
-namespace {
-
-  constexpr size_t kCapaticy = 1024;
-
-  bool gRes = false;
-  
-  uint8_t *gBuf = nullptr;
-
-  uint32_t gLen = 0;
-
-  void callback(const uint8_t *bytes, uint32_t length) {
-    if (gBuf == nullptr) {
-      gBuf = new uint8_t[kCapaticy];
-      gLen = length;
-      memcpy(gBuf, bytes, static_cast<size_t>(length));
-    } else {
-      gRes = gLen == length && memcmp(gBuf, bytes, static_cast<size_t>(length)) == 0;
-      delete[] gBuf;
-      gBuf = nullptr;
-      gLen = 0;
-    }
-  }
-} // namespace
-
 int main(int argc, char *argv[]) {
 
   Midi midi(120);
@@ -73,15 +49,28 @@ int main(int argc, char *argv[]) {
     midi.AddTrack(std::move(track));
   }
 
+  constexpr size_t kCapacity = 1024;
+  uint8_t buf[kCapacity];
+  uint32_t len = 0;
+  bool res = false;
+
   std::cout << "dump" << std::endl;
-  midi.Dump(callback);
+  midi.Dump([&] (const uint8_t *bytes, uint32_t length) {
+      len = length;
+      memcpy(buf, bytes, static_cast<size_t>(length));
+  });
   std::cout << "parse" << std::endl;
-  Midi tmp = Midi::Parse(gBuf, gLen);
+  Midi tmp = Midi::Parse(buf, len);
   Midi m = tmp;
   std::cout << "dump" << std::endl;
-  m.Dump(callback);
+  m.Dump([&] (const uint8_t *bytes, uint32_t length) {
+      res = len == length && memcmp(buf, bytes, static_cast<size_t>(length)) == 0;
+  });
+  for (auto i = 0; i != len; ++i) {
+    std::cout << i << ": " << int(buf[i]) << std::endl;
+  }
 
-  std::cout << gRes << std::endl;
+  std::cout << res << std::endl;
 
   return 0;
 }
