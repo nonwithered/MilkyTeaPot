@@ -7,10 +7,10 @@
 
 int main(int argc, char *argv[]) {
 
-  Midi midi(120);
-  Track track;
+  milk_powder::Midi midi(120);
+  milk_powder::Track track;
   track.AddEvent(120, 0x90, 0x3c, 0x7f);
-  SysexPackets sysex_packets;
+  milk_powder::SysexPackets sysex_packets;
   {
     uint8_t args[] = { 0x43, 0x12, 0x00 };
     sysex_packets.AddSysex(0, 3, args);
@@ -27,18 +27,18 @@ int main(int argc, char *argv[]) {
   midi.AddTrack(std::move(track));
 
   {
-    Track p = midi.GetTrack(0);
-    Track q = p;
-    Track track = q;
+    milk_powder::Track p = midi.GetTrack(0);
+    milk_powder::Track q = p;
+    milk_powder::Track track = q;
     {
-      Event p = track.GetEvent(1);
+      milk_powder::Event p = track.GetEvent(1);
       assert(p.GetMode() == SYSEX);
-      SysexPackets q = std::move(p);
-      SysexPackets sysex_packets = q;
+      milk_powder::SysexPackets q = std::move(p);
+      milk_powder::SysexPackets sysex_packets = q;
       track.AddSysexPackets(std::move(sysex_packets));
     }
     {
-      Event e = track.GetEvent(0);
+      milk_powder::Event e = track.GetEvent(0);
       uint32_t delta = e.GetDelta();
       uint8_t mode = e.GetMode();
       assert(mode != SYSEX && mode != META);
@@ -60,8 +60,8 @@ int main(int argc, char *argv[]) {
       memcpy(buf, bytes, static_cast<size_t>(length));
   });
   std::cout << "parse" << std::endl;
-  Midi tmp = Midi::Parse(buf, len);
-  Midi m = tmp;
+  milk_powder::Midi tmp = milk_powder::Midi::Parse(buf, len);
+  milk_powder::Midi m = tmp;
   std::cout << "dump" << std::endl;
   m.Dump([&] (const uint8_t *bytes, uint32_t length) {
       res = len == length && memcmp(buf, bytes, static_cast<size_t>(length)) == 0;

@@ -89,6 +89,8 @@ void Midi_Dump(const struct Midi_t *midi, DumpFunction callback, void *receiver)
 
 #include <cassert>
 
+namespace milk_powder {
+
 class Sysex {
 
 private:
@@ -413,6 +415,8 @@ public:
     track.track_ = nullptr;
   }
 };
+
+} // namespace milk_powder
 
 #endif // ifdef __cplusplus
 
