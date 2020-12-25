@@ -22,7 +22,6 @@ private:
 
 private:
     QString file_name_;
-    QByteArray bytes_;
 
 private:
     FileHolder(const FileHolder &) = delete;

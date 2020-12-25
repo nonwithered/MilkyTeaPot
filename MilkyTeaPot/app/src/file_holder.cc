@@ -3,10 +3,11 @@
 #include <QFile>
 #include <QIODevice>
 
+#include "plugin/plugin_manager.h"
+
 FileHolder::FileHolder(QObject *parent)
     : QObject(parent)
-    , file_name_()
-    , bytes_() {
+    , file_name_() {
 
 }
 
@@ -19,6 +20,7 @@ bool FileHolder::Available() {
 
 void FileHolder::New() {
     Close();
+    emit Plugin::Manager::Instance().GetCallbacks().SignalNew();
 }
 
 bool FileHolder::Open(QString file_name) {
@@ -26,7 +28,7 @@ bool FileHolder::Open(QString file_name) {
     if (!file.open(QIODevice::ReadOnly)) {
         return false;
     }
-    bytes_ = file.readAll();
+    emit Plugin::Manager::Instance().GetCallbacks().SignalOpen(file);
     file.close();
     return true;
 }
@@ -41,16 +43,17 @@ bool FileHolder::SaveAs(QString file_name) {
 
 void FileHolder::Close() {
     file_name_ = QString();
-    bytes_.clear();
+    emit Plugin::Manager::Instance().GetCallbacks().SignalClose();
 }
 
 
 bool FileHolder::Save(QString file_name) {
     QFile file(file_name);
-    if (!file.open(QIODevice::WriteOnly)) {
+    if (!file.open(QIODevice::ReadWrite)) {
         return false;
     }
-    file.write(bytes_);
+    emit Plugin::Manager::Instance().GetCallbacks().SignalSave(file);
     file.close();
+    file_name_ = file_name;
     return true;
 }

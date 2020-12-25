@@ -19,7 +19,7 @@ public:
 
 public:
     QString OnLoad(QDir &) final;
-    void OnAttach(QHash<QString, BasePlugin *> &, BaseEvents &) final;
+    void OnAttach(QHash<QString, BasePlugin *> &, Callbacks &) final;
     void OnUnload() final;
 };
 

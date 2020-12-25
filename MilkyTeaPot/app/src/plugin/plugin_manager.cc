@@ -14,14 +14,16 @@ Manager &Manager::Instance() {
 
 Manager *Manager::instance_ = nullptr;
 
-Manager::Manager(QObject *parent)
-    : QObject(parent) {
+Manager::Manager(MainWindow *main_window)
+    : QObject(main_window)
+    , main_window_(*main_window) {
     if (instance_ != nullptr) {
         return;
     }
+    instance_ = this;
     OnLoad();
     OnAttach();
-    instance_ = this;
+    Connect();
 }
 
 Manager::~Manager() {
@@ -44,14 +46,13 @@ void Manager::OnLoad() {
         BasePlugin *instance = qobject_cast<BasePlugin *>(loader->instance());
         QString key = instance->OnLoad(instancen_dir);
         plugins_.insert(key, instance);
-        loader->setParent(this);
         loaders_.insert(key, loader);
     }
 }
 
 void Manager::OnAttach() {
     foreach (BasePlugin *plugin, plugins_) {
-        plugin->OnAttach(plugins_, base_events_);
+        plugin->OnAttach(plugins_, callbacks_);
     }
 }
 
@@ -60,6 +61,34 @@ void Manager::OnUnload() {
         plugins_.find(key).value()->OnUnload();
         loaders_.find(key).value()->unload();
     }
+}
+
+Callbacks &Manager::GetCallbacks() {
+    return callbacks_;
+}
+
+void Manager::Connect() {
+    set_modified_ = [=] () -> void {
+        main_window_.SetModified();
+    };
+    add_view_action_ = [=] (QAction *action, QAction *insert_before) -> void {
+        main_window_.AddViewAction(action, insert_before);
+    };
+    add_view_menu_ = [=] (QMenu *menu, QAction *insert_before) -> QAction * {
+        return main_window_.AddViewMenu(menu, insert_before);
+    };
+    add_view_separator_ = [=] (QAction *insert_before) -> QAction * {
+        return main_window_.AddViewSeparator(insert_before);
+    };
+    add_tools_action_ = [=] (QAction *action, QAction *insert_before) -> void {
+        main_window_.AddToolsAction(action, insert_before);
+    };
+    add_tools_menu_ = [=] (QMenu *menu, QAction *insert_before) -> QAction * {
+        return main_window_.AddToolsMenu(menu, insert_before);
+    };
+    add_tools_separator_ = [=] (QAction *insert_before) -> QAction * {
+        return main_window_.AddToolsSeparator(insert_before);
+    };
 }
 
 } // namespace Plugin

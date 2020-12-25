@@ -20,10 +20,9 @@ bool MainWindow::FileOpen() {
     if (!FileClose()) {
         return false;
     }
-    QString file_name = QFileDialog::getOpenFileName(this, tr("open"), ".",
-                               tr(kAppName " files (" kFileNameSuffix ")"));
+    QString file_name = QFileDialog::getOpenFileName(this, tr("open"), ".", tr("(*.*)"));
     if (file_name.isEmpty()) {
-        return true;
+        return false;
     }
     return file_holder_->Open(file_name);
 }
@@ -33,19 +32,26 @@ bool MainWindow::FileSave() {
         return true;
     }
     if (file_holder_->Available()) {
-        return file_holder_->Save();
+        if (!file_holder_->Save()) {
+            return false;
+        }
+        setWindowModified(false);
+        return true;
     } else {
         return FileSaveAs();
     }
 }
 
 bool MainWindow::FileSaveAs() {
-    QString file_name = QFileDialog::getOpenFileName(this, tr("save as"), ".",
-                               tr(kAppName " files (" kFileNameSuffix ")"));
+    QString file_name = QFileDialog::getOpenFileName(this, tr("save as"), ".", tr("(*.*)"));
     if (file_name.isEmpty()) {
         return false;
     }
-    return file_holder_->SaveAs(file_name);
+    if (!file_holder_->SaveAs(file_name)) {
+        return false;
+    }
+    setWindowModified(false);
+    return true;
 }
 
 bool MainWindow::FileClose() {
@@ -55,16 +61,17 @@ bool MainWindow::FileClose() {
     int r = QMessageBox::warning(this, tr("continue"),
                                  tr(kWarnMidified "\n" kQuestChanges),
                                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-    bool b = false;
-    if (r == QMessageBox::Yes) {
-        b = FileSave();
-    } else if (r == QMessageBox::No) {
-        b = true;
-    }
-    if (b) {
+    switch (r) {
+    case QMessageBox::Yes:
+        if (!FileSave()) {
+            return false;
+        }
+    case QMessageBox::No:
         file_holder_->Close();
+        return true;
+    default:
+        return false;
     }
-    return b;
 }
 
 void MainWindow::FileQuit() {
@@ -160,6 +167,50 @@ void MainWindow::CreateMenus() {
     menu_view = menuBar()->addMenu(tr("&View"));
 
     menu_tools = menuBar()->addMenu(tr("&Tools"));
-    menu_tools->addSeparator();
+    menu_tool_separator = menu_tools->addSeparator();
     menu_tools->addAction(action_tools_options);
 }
+
+void MainWindow::SetModified() {
+    setWindowModified(true);
+}
+
+void MainWindow::AddViewAction(QAction *action, QAction *insert_before) {
+    action->setParent(this);
+    menu_view->insertAction(insert_before, action);
+}
+
+
+QAction *MainWindow::AddViewMenu(QMenu *menu, QAction *insert_before) {
+    menu->setParent(this);
+    return menu_view->insertMenu(insert_before, menu);
+}
+
+QAction *MainWindow::AddViewSeparator(QAction *insert_before) {
+    return menu_view->insertSeparator(insert_before);
+}
+
+void MainWindow::AddToolsAction(QAction *action, QAction *insert_before) {
+    action->setParent(this);
+    if (insert_before == nullptr) {
+        insert_before = menu_tool_separator;
+    }
+    menu_tools->insertAction(insert_before, action);
+}
+
+QAction *MainWindow::AddToolsMenu(QMenu *menu, QAction *insert_before) {
+    menu->setParent(this);
+    if (insert_before == nullptr) {
+        insert_before = menu_tool_separator;
+    }
+    return menu_tools->insertMenu(insert_before, menu);
+}
+
+QAction *MainWindow::AddToolsSeparator(QAction *insert_before) {
+    if (insert_before == nullptr) {
+        insert_before = menu_tool_separator;
+    }
+    return menu_tools->insertSeparator(insert_before);
+}
+
+

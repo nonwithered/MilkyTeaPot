@@ -6,7 +6,6 @@
 #include <QAction>
 
 #include "ui/ui_mainwindow.h"
-
 #include "file_holder.h"
 
 class MainWindow : public QMainWindow {
@@ -31,6 +30,15 @@ private:
     void CreateActions();
     void CreateMenus();
 
+public:
+    void SetModified();
+    void AddViewAction(QAction *action, QAction *insert_before);
+    QAction *AddViewMenu(QMenu *menu, QAction *insert_before);
+    QAction *AddViewSeparator(QAction *insert_before);
+    void AddToolsAction(QAction *action, QAction *insert_before);
+    QAction *AddToolsMenu(QMenu *menu, QAction *insert_before);
+    QAction *AddToolsSeparator(QAction *insert_before);
+
 private:
     Ui::MainWindow ui;
     QMenu *menu_file;
@@ -45,6 +53,7 @@ private:
     QAction *action_edit_redo;
     QMenu *menu_view;
     QMenu *menu_tools;
+    QAction *menu_tool_separator;
     QAction *action_tools_options;
 
 private:

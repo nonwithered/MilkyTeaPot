@@ -21,7 +21,7 @@ QString FileEditor::OnLoad(QDir &) {
     return QString::fromUtf8(kPluginName);
 }
 
-void FileEditor::OnAttach(QHash<QString, BasePlugin *> &, BaseEvents &) {
+void FileEditor::OnAttach(QHash<QString, BasePlugin *> &, Callbacks &) {
     qDebug() << "OnAttach";
 }
 

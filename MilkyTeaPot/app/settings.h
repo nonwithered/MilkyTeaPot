@@ -5,6 +5,4 @@
 
 #define kPluginsDir "plugins"
 
-#define kFileNameSuffix ".mid.json"
-
 #endif // ifndef APP_SETTINGS_H
