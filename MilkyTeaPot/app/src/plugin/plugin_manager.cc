@@ -23,7 +23,6 @@ Manager::Manager(MainWindow *main_window)
     instance_ = this;
     OnLoad();
     OnAttach();
-    Connect();
 }
 
 Manager::~Manager() {
@@ -67,28 +66,46 @@ Callbacks &Manager::GetCallbacks() {
     return callbacks_;
 }
 
-void Manager::Connect() {
-    set_modified_ = [=] () -> void {
-        main_window_.SetModified();
-    };
-    add_view_action_ = [=] (QAction *action, QAction *insert_before) -> void {
-        main_window_.AddViewAction(action, insert_before);
-    };
-    add_view_menu_ = [=] (QMenu *menu, QAction *insert_before) -> QAction * {
-        return main_window_.AddViewMenu(menu, insert_before);
-    };
-    add_view_separator_ = [=] (QAction *insert_before) -> QAction * {
-        return main_window_.AddViewSeparator(insert_before);
-    };
-    add_tools_action_ = [=] (QAction *action, QAction *insert_before) -> void {
-        main_window_.AddToolsAction(action, insert_before);
-    };
-    add_tools_menu_ = [=] (QMenu *menu, QAction *insert_before) -> QAction * {
-        return main_window_.AddToolsMenu(menu, insert_before);
-    };
-    add_tools_separator_ = [=] (QAction *insert_before) -> QAction * {
-        return main_window_.AddToolsSeparator(insert_before);
-    };
+void Manager::ForeachOption(std::function<void(const QString *, QWidget *)> foreach_option) {
+    const QString *s;
+    QWidget *w;
+    foreach (auto option, options_) {
+        std::tie(s, w) = option();
+        foreach_option(s, w);
+    }
 }
+
+void Manager::SetModified() {
+    main_window_.SetModified();
+}
+
+void Manager::AddViewAction(QAction *action, QAction *insert_before) {
+    main_window_.AddViewAction(action, insert_before);
+}
+
+QAction *Manager::AddViewMenu(QMenu *menu, QAction *insert_before) {
+    return main_window_.AddViewMenu(menu, insert_before);
+}
+
+QAction *Manager::AddViewSeparator(QAction *insert_before) {
+    return main_window_.AddViewSeparator(insert_before);
+}
+
+void Manager::AddToolsAction(QAction *action, QAction *insert_before) {
+    main_window_.AddToolsAction(action, insert_before);
+}
+
+QAction *Manager::AddToolsMenu(QMenu *menu, QAction *insert_before) {
+    return main_window_.AddToolsMenu(menu, insert_before);
+}
+
+QAction *Manager::AddToolsSeparator(QAction *insert_before) {
+    return main_window_.AddToolsSeparator(insert_before);
+}
+
+void Manager::AddPreferencesOption(std::function<std::tuple<const QString *, QWidget *>()> option) {
+    options_.append(option);
+}
+
 
 } // namespace Plugin

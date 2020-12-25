@@ -1,11 +1,12 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <QMainWindow>
 #include <QMenu>
 #include <QAction>
+#include <QWidget>
 
-#include "ui/ui_mainwindow.h"
+#include "ui/ui_main_window.h"
 #include "file_holder.h"
 
 class MainWindow : public QMainWindow {
@@ -27,6 +28,12 @@ public:
     ~MainWindow();
 
 private:
+    MainWindow(const MainWindow &) = delete;
+    MainWindow(MainWindow &&) = delete;
+    MainWindow &operator=(const MainWindow &) = delete;
+    MainWindow &operator=(MainWindow &&) = delete;
+
+private:
     void CreateActions();
     void CreateMenus();
 
@@ -40,7 +47,7 @@ public:
     QAction *AddToolsSeparator(QAction *insert_before);
 
 private:
-    Ui::MainWindow ui;
+    Ui::Ui_MainWindow ui;
     QMenu *menu_file;
     QAction *action_file_new;
     QAction *action_file_open;
@@ -60,4 +67,4 @@ private:
     FileHolder *file_holder_;
 };
 
-#endif // ifndef MAINWINDOW_H
+#endif // ifndef MAIN_WINDOW_H

@@ -4,11 +4,12 @@
 #include <QObject>
 #include <QMap>
 #include <QPluginLoader>
+#include <QList>
 
 #include <functional>
 
 #include "plugin_base.h"
-#include "../mainwindow.h"
+#include "../main_window.h"
 
 namespace Plugin {
 
@@ -29,12 +30,12 @@ public:
 
 public:
     Callbacks &GetCallbacks();
+    void ForeachOption(std::function<void(const QString *, QWidget *)>);
 
 private:
     void OnLoad();
     void OnAttach();
     void OnUnload();
-    void Connect();
 
 private:
     MainWindow &main_window_;
@@ -43,13 +44,17 @@ private:
     QHash<QString, QPluginLoader *> loaders_;
 
 private:
-    std::function<void()> set_modified_;
-    std::function<void(QAction *, QAction *)> add_view_action_;
-    std::function<QAction *(QMenu *, QAction *)> add_view_menu_;
-    std::function<QAction *(QAction *)> add_view_separator_;
-    std::function<void(QAction *, QAction *)> add_tools_action_;
-    std::function<QAction *(QMenu *, QAction *)> add_tools_menu_;
-    std::function<QAction *(QAction *)> add_tools_separator_;
+    void SetModified();
+    void AddViewAction(QAction *action, QAction *insert_before);
+    QAction *AddViewMenu(QMenu *menu, QAction *insert_before);
+    QAction *AddViewSeparator(QAction *insert_before);
+    void AddToolsAction(QAction *action, QAction *insert_before);
+    QAction *AddToolsMenu(QMenu *menu, QAction *insert_before);
+    QAction *AddToolsSeparator(QAction *insert_before);
+    void AddPreferencesOption(std::function<std::tuple<const QString *, QWidget *>()> option);
+
+private:
+    QList<std::function<std::tuple<const QString *, QWidget *>()>> options_;
 
 private:
     Manager(const Manager &) = delete;

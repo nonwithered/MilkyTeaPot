@@ -8,6 +8,9 @@
 #include <QAction>
 #include <QMenu>
 
+#include <functional>
+#include <tuple>
+
 #include "../../settings.h"
 
 #define kInterfaceName "BasePlugin"
@@ -21,18 +24,19 @@ class Callbacks : public QObject {
 
 signals:
     void SignalNew();
-    void SignalOpen(QFile&);
-    void SignalSave(QFile&);
+    void SignalOpen(QFile &);
+    void SignalSave(QFile &);
     void SignalClose();
 
 public:
-    void SetWindowModified();
+    void SetModified();
     void AddViewAction(QAction *action, QAction *insert_before = nullptr);
     QAction *AddViewMenu(QMenu *menu, QAction *insert_before = nullptr);
     QAction *AddViewSeparator(QAction *insert_before = nullptr);
     void AddToolsAction(QAction *action, QAction *insert_before = nullptr);
     QAction *AddToolsMenu(QMenu *menu, QAction *insert_before = nullptr);
     QAction *AddToolsSeparator(QAction *insert_before = nullptr);
+    void AddPreferencesOption(std::function<std::tuple<const QString *, QWidget *>()> option);
 
 public:
     Callbacks();

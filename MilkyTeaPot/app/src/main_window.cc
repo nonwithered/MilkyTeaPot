@@ -1,13 +1,11 @@
-#include "mainwindow.h"
+#include "main_window.h"
 
 #include <QKeySequence>
 #include <QMessageBox>
 #include <QFileDialog>
 
 #include "settings.h"
-
-#define kWarnMidified "The document has been modified. "
-#define kQuestChanges "Do you want to save your changes? "
+#include "preferences_dialog.h"
 
 void MainWindow::FileNew() {
     if (!FileClose()) {
@@ -90,7 +88,9 @@ void MainWindow::EditRedo() {
 }
 
 void MainWindow::ToolsOptions() {
-
+    QDialog *dialog = new PreferencesDialog;
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->exec();
 }
 
 MainWindow::MainWindow(QWidget *parent)
