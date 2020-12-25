@@ -1,0 +1,6 @@
+*
+!.gitignore
+!LICENSE
+!*.pro
+!app
+!plugin_file_editor

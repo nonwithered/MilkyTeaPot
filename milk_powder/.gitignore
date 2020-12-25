@@ -2,7 +2,7 @@
 !.gitignore
 !LICENSE
 !Cargo.toml
-!include
 !src
 !test
+!include
 !demo
