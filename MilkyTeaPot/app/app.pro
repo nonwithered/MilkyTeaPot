@@ -29,4 +29,5 @@ HEADERS += \
     src/file_holder.h \
     settings.h
 
-HEADERS += extern/base_plugin.h
+HEADERS += \
+    extern/plugin_interface.h

@@ -2,6 +2,9 @@
 
 #include "plugin/plugin_manager.h"
 
+PreferencesDialog::~PreferencesDialog() {
+}
+
 PreferencesDialog::PreferencesDialog(QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f) {
     ui.SetupUi(this);
@@ -13,7 +16,4 @@ PreferencesDialog::PreferencesDialog(QWidget *parent, Qt::WindowFlags f)
                     ui.list_widget->addItem(s);
                     ui.stacked_layout->addWidget(w);
                 });
-}
-
-PreferencesDialog::~PreferencesDialog() {
 }

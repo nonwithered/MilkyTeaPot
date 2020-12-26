@@ -64,6 +64,8 @@ bool MainWindow::FileClose() {
         if (!FileSave()) {
             return false;
         }
+        file_holder_->Close();
+        return true;
     case QMessageBox::No:
         file_holder_->Close();
         return true;
@@ -93,15 +95,15 @@ void MainWindow::ToolsOptions() {
     dialog->exec();
 }
 
+MainWindow::~MainWindow() {
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , file_holder_(new FileHolder(this)) {
     ui.SetupUi(this);
     CreateActions();
     CreateMenus();
-}
-
-MainWindow::~MainWindow() {
 }
 
 void MainWindow::CreateActions() {

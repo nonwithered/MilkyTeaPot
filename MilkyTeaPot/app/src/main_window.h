@@ -24,8 +24,8 @@ private slots:
     void ToolsOptions();
 
 public:
-    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    MainWindow(QWidget *parent = nullptr);
 
 private:
     MainWindow(const MainWindow &) = delete;

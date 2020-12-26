@@ -10,8 +10,8 @@ namespace Ui {
 class Ui_PreferencesDialog {
 
 public:
-    Ui_PreferencesDialog() = default;
     ~Ui_PreferencesDialog() = default;
+    Ui_PreferencesDialog() = default;
 
 private:
     Ui_PreferencesDialog(const Ui_PreferencesDialog &) = delete;

@@ -5,13 +5,13 @@
 
 #include "plugin/plugin_manager.h"
 
+FileHolder::~FileHolder() {
+}
+
 FileHolder::FileHolder(QObject *parent)
     : QObject(parent)
     , file_name_() {
 
-}
-
-FileHolder::~FileHolder() {
 }
 
 bool FileHolder::Available() {

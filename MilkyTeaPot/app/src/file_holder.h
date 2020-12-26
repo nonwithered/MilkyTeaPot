@@ -8,8 +8,8 @@ class FileHolder : public QObject {
     Q_OBJECT
 
 public:
-    FileHolder(QObject *parent = nullptr);
     ~FileHolder();
+    FileHolder(QObject *parent = nullptr);
     bool Available();
     void New();
     bool Open(QString file_name);

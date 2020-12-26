@@ -50,6 +50,10 @@ QMdiSubWindow *Manager::AddCentralSubWindow(QWidget *w) {
     return main_window_.AddCentralSubWindow(w);
 }
 
+Manager::~Manager() {
+    OnUnload();
+}
+
 Manager::Manager(MainWindow *main_window)
     : Callbacks(main_window)
     , main_window_(*main_window) {
@@ -59,10 +63,6 @@ Manager::Manager(MainWindow *main_window)
     instance_ = this;
     OnLoad();
     OnAttach();
-}
-
-Manager::~Manager() {
-    OnUnload();
 }
 
 void Manager::OnLoad() {
@@ -78,7 +78,7 @@ void Manager::OnLoad() {
         if (!loader->load()) {
             delete loader;
         }
-        AbstractPlugin *instance = qobject_cast<AbstractPlugin *>(loader->instance());
+        PluginInterface *instance = qobject_cast<PluginInterface *>(loader->instance());
         QString key = instance->OnLoad(instancen_dir);
         plugins_.insert(key, instance);
         loaders_.insert(key, loader);
@@ -86,7 +86,7 @@ void Manager::OnLoad() {
 }
 
 void Manager::OnAttach() {
-    foreach (AbstractPlugin *plugin, plugins_) {
+    foreach (PluginInterface *plugin, plugins_) {
         plugin->OnAttach(plugins_, this);
     }
 }

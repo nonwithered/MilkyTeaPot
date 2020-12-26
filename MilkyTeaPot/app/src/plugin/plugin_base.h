@@ -16,7 +16,7 @@
 
 #define kInterfaceName "BasePlugin"
 #define kInterfaceVersion "1.0"
-#define AbstractPlugin_iid kAppName "." kInterfaceName "/" kInterfaceVersion
+#define PluginInterface_iid kAppName "." kInterfaceName "/" kInterfaceVersion
 
 namespace Plugin {
 
@@ -41,8 +41,8 @@ public:
     virtual QMdiSubWindow *AddCentralSubWindow(QWidget *w) = 0;
 
 public:
+    ~Callbacks();
     Callbacks(QObject *parent = nullptr);
-    ~Callbacks() override;
 
 private:
     Callbacks(const Callbacks &) = delete;
@@ -51,26 +51,28 @@ private:
     Callbacks &operator=(Callbacks &&) = delete;
 };
 
-class AbstractPlugin {
+class PluginInterface {
 
 public:
     virtual QString OnLoad(QDir &) = 0;
-    virtual void OnAttach(QHash<QString, AbstractPlugin *> &, Callbacks *) = 0;
+    virtual void OnAttach(QHash<QString, PluginInterface *> &, Callbacks *) = 0;
     virtual void OnUnload() = 0;
 
 public:
-    AbstractPlugin() = default;
-    virtual ~AbstractPlugin() = default;
+    virtual ~PluginInterface() = default;
+
+protected:
+    PluginInterface() = default;
 
 private:
-    AbstractPlugin(const AbstractPlugin &) = delete;
-    AbstractPlugin(AbstractPlugin &&) = delete;
-    AbstractPlugin &operator=(const AbstractPlugin &) = delete;
-    AbstractPlugin &operator=(AbstractPlugin &&) = delete;
+    PluginInterface(const PluginInterface &) = delete;
+    PluginInterface(PluginInterface &&) = delete;
+    PluginInterface &operator=(const PluginInterface &) = delete;
+    PluginInterface &operator=(PluginInterface &&) = delete;
 };
 
 } // namespace Plugin
 
-Q_DECLARE_INTERFACE(Plugin::AbstractPlugin, AbstractPlugin_iid)
+Q_DECLARE_INTERFACE(Plugin::PluginInterface, PluginInterface_iid)
 
 #endif // ifndef PLUGIN_BASE_H

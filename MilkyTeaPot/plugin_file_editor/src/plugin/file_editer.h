@@ -3,15 +3,15 @@
 
 #include <QObject>
 
-#include "base_plugin.h"
+#include "plugin_interface.h"
 
 namespace Plugin {
 
-class FileEditor : public QObject, public AbstractPlugin {
+class FileEditor : public QObject, public PluginInterface {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID AbstractPlugin_iid)
-    Q_INTERFACES(Plugin::AbstractPlugin)
+    Q_PLUGIN_METADATA(IID PluginInterface_iid)
+    Q_INTERFACES(Plugin::PluginInterface)
 
 public:
     FileEditor();
@@ -19,7 +19,7 @@ public:
 
 public:
     QString OnLoad(QDir &) final;
-    void OnAttach(QHash<QString, AbstractPlugin *> &, Callbacks *) final;
+    void OnAttach(QHash<QString, PluginInterface *> &, Callbacks *) final;
     void OnUnload() final;
 };
 

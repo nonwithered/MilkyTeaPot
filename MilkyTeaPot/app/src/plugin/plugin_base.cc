@@ -4,11 +4,11 @@
 
 namespace Plugin {
 
-Callbacks::Callbacks(QObject *parent)
-    : QObject(parent) {
+Callbacks::~Callbacks() {
 }
 
-Callbacks::~Callbacks() {
+Callbacks::Callbacks(QObject *parent)
+    : QObject(parent) {
 }
 
 } // namespace Plugin

@@ -12,8 +12,8 @@ namespace Ui {
 class Ui_MainWindow {
 
 public:
-    Ui_MainWindow() = default;
     ~Ui_MainWindow() = default;
+    Ui_MainWindow() = default;
 
 private:
     Ui_MainWindow(const Ui_MainWindow &) = delete;

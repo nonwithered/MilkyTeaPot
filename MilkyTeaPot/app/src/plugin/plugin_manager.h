@@ -34,8 +34,8 @@ public:
     QMdiSubWindow *AddCentralSubWindow(QWidget *w) final;
 
 public:
+    ~Manager();
     Manager(MainWindow *main_window);
-    ~Manager() override;
 
 public:
     void ForeachOption(std::function<QWidget *()>, std::function<void(const QString &, QWidget *)>);
@@ -47,7 +47,7 @@ private:
 
 private:
     MainWindow &main_window_;
-    QHash<QString, AbstractPlugin *> plugins_;
+    QHash<QString, PluginInterface *> plugins_;
     QHash<QString, QPluginLoader *> loaders_;
     QList<std::function<const QString(QWidget &)>> options_;
 

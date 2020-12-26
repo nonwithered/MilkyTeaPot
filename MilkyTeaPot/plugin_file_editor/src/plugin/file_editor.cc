@@ -8,7 +8,7 @@ namespace Plugin {
 
 FileEditor::FileEditor()
     : QObject()
-    , AbstractPlugin() {
+    , PluginInterface() {
     qDebug() << "ctor";
 }
 
@@ -21,7 +21,7 @@ QString FileEditor::OnLoad(QDir &) {
     return QString::fromUtf8(kPluginName);
 }
 
-void FileEditor::OnAttach(QHash<QString, AbstractPlugin *> &, Callbacks *) {
+void FileEditor::OnAttach(QHash<QString, PluginInterface *> &, Callbacks *) {
     qDebug() << "OnAttach";
 }
 

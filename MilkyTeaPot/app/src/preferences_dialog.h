@@ -9,8 +9,8 @@ class PreferencesDialog : public QDialog {
     Q_OBJECT
 
 public:
-    PreferencesDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~PreferencesDialog();
+    PreferencesDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
 private:
     PreferencesDialog(const PreferencesDialog &) = delete;
