@@ -11,7 +11,7 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     MainWindow w;
-    Plugin::Manager m(&w);
+    Plugin::Manager::Instance(&w);
     w.show();
     return a.exec();
 }

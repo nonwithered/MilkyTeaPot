@@ -17,10 +17,7 @@ class Manager : public Callbacks {
     Q_OBJECT
 
 public:
-    static Manager &Instance();
-
-private:
-    static Manager *instance_;
+    static Manager &Instance(MainWindow *main_window = nullptr);
 
 public:
     void SetModified() final;
@@ -30,15 +27,17 @@ public:
     void AddToolsAction(QAction *action, QAction *insert_before = nullptr) final;
     QAction *AddToolsMenu(QMenu *menu, QAction *insert_before = nullptr) final;
     QAction *AddToolsSeparator(QAction *insert_before = nullptr) final;
-    void AddPreferencesOption(std::function<const QString(QWidget &)> option) final;
+    void AddPreferencesOption(std::function<std::tuple<const QString, QWidget *>()> option) final;
     QMdiSubWindow *AddCentralSubWindow(QWidget *w) final;
 
 public:
     ~Manager();
+
+private:
     Manager(MainWindow *main_window);
 
 public:
-    void ForeachOption(std::function<QWidget *()>, std::function<void(const QString &, QWidget *)>);
+    void ForeachOption(std::function<void(const QString &, QWidget *)>);
 
 private:
     void OnLoad();
@@ -49,7 +48,7 @@ private:
     MainWindow &main_window_;
     QHash<QString, PluginInterface *> plugins_;
     QHash<QString, QPluginLoader *> loaders_;
-    QList<std::function<const QString(QWidget &)>> options_;
+    QList<std::function<std::tuple<const QString, QWidget *>()>> options_;
 
 private:
     Manager(const Manager &) = delete;

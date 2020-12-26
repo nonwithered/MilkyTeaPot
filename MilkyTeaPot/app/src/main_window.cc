@@ -11,7 +11,7 @@ void MainWindow::FileNew() {
     if (!FileClose()) {
         return;
     }
-    file_holder_->New();
+    file_manager_->New();
 }
 
 bool MainWindow::FileOpen() {
@@ -22,15 +22,15 @@ bool MainWindow::FileOpen() {
     if (file_name.isEmpty()) {
         return false;
     }
-    return file_holder_->Open(file_name);
+    return file_manager_->Open(file_name);
 }
 
 bool MainWindow::FileSave() {
     if (!isWindowModified()) {
         return true;
     }
-    if (file_holder_->Available()) {
-        if (!file_holder_->Save()) {
+    if (file_manager_->Available()) {
+        if (!file_manager_->Save()) {
             return false;
         }
         setWindowModified(false);
@@ -45,7 +45,7 @@ bool MainWindow::FileSaveAs() {
     if (file_name.isEmpty()) {
         return false;
     }
-    if (!file_holder_->SaveAs(file_name)) {
+    if (!file_manager_->SaveAs(file_name)) {
         return false;
     }
     setWindowModified(false);
@@ -64,10 +64,10 @@ bool MainWindow::FileClose() {
         if (!FileSave()) {
             return false;
         }
-        file_holder_->Close();
+        file_manager_->Close();
         return true;
     case QMessageBox::No:
-        file_holder_->Close();
+        file_manager_->Close();
         return true;
     default:
         return false;
@@ -100,7 +100,7 @@ MainWindow::~MainWindow() {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , file_holder_(new FileHolder(this)) {
+    , file_manager_(new FileManager(this)) {
     ui.SetupUi(this);
     CreateActions();
     CreateMenus();

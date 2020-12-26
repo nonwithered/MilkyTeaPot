@@ -8,11 +8,10 @@
 
 namespace Plugin {
 
-Manager &Manager::Instance() {
-    return *instance_;
+Manager &Manager::Instance(MainWindow *main_window) {
+    static Manager *instance = new Manager(main_window);
+    return *instance;
 }
-
-Manager *Manager::instance_ = nullptr;
 
 void Manager::SetModified() {
     main_window_.SetModified();
@@ -42,7 +41,7 @@ QAction *Manager::AddToolsSeparator(QAction *insert_before) {
     return main_window_.AddToolsSeparator(insert_before);
 }
 
-void Manager::AddPreferencesOption(std::function<const QString(QWidget &)> option) {
+void Manager::AddPreferencesOption(std::function<std::tuple<const QString, QWidget *>()> option) {
     options_.append(option);
 }
 
@@ -57,10 +56,6 @@ Manager::~Manager() {
 Manager::Manager(MainWindow *main_window)
     : Callbacks(main_window)
     , main_window_(*main_window) {
-    if (instance_ != nullptr) {
-        return;
-    }
-    instance_ = this;
     OnLoad();
     OnAttach();
 }
@@ -98,10 +93,11 @@ void Manager::OnUnload() {
     }
 }
 
-void Manager::ForeachOption(std::function<QWidget *()> get_widget, std::function<void(const QString &, QWidget *)> foreach_option) {
-    foreach (std::function<const QString(QWidget &)> option, options_) {
-        QWidget *w = get_widget();
-        const QString s = option(*w);
+void Manager::ForeachOption(std::function<void(const QString &, QWidget *)> foreach_option) {
+    QString s;
+    QWidget *w = nullptr;
+    foreach (auto option, options_) {
+        std::tie(s, w) = option();
         foreach_option(s, w);
     }
 }

@@ -11,6 +11,7 @@
 #include <QMdiSubWindow>
 
 #include <functional>
+#include <tuple>
 
 #include "../../settings.h"
 
@@ -37,7 +38,7 @@ public:
     virtual void AddToolsAction(QAction *action, QAction *insert_before = nullptr) = 0;
     virtual QAction *AddToolsMenu(QMenu *menu, QAction *insert_before = nullptr) = 0;
     virtual QAction *AddToolsSeparator(QAction *insert_before = nullptr) = 0;
-    virtual void AddPreferencesOption(std::function<const QString(QWidget &)> option) = 0;
+    virtual void AddPreferencesOption(std::function<std::tuple<const QString, QWidget *>()> option) = 0;
     virtual QMdiSubWindow *AddCentralSubWindow(QWidget *w) = 0;
 
 public:
@@ -55,7 +56,7 @@ class PluginInterface {
 
 public:
     virtual QString OnLoad(QDir &) = 0;
-    virtual void OnAttach(QHash<QString, PluginInterface *> &, Callbacks *) = 0;
+    virtual void OnAttach(const QHash<QString, PluginInterface *> &plugins, Callbacks *callbacks) = 0;
     virtual void OnUnload() = 0;
 
 public:

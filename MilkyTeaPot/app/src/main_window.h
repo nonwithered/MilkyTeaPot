@@ -7,7 +7,7 @@
 #include <QWidget>
 
 #include "ui/ui_main_window.h"
-#include "file_holder.h"
+#include "file_manager.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -65,7 +65,7 @@ private:
     QAction *action_tools_options;
 
 private:
-    FileHolder *file_holder_;
+    FileManager *file_manager_;
 };
 
 #endif // ifndef MAIN_WINDOW_H

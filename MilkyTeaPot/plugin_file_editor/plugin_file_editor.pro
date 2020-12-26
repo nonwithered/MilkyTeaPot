@@ -11,13 +11,17 @@ TARGET = file_editor
 DESTDIR = plugins/file_editor
 
 SOURCES += \
-    src/plugin/file_editor.cc \
+    src/text_file_editor.cc \
+    src/text_file_manager.cc \
+    src/plugin/plugin_file_editor.cc \
+    src/ui/ui_text_file_editor.cc \
     src/lib.cc
 
 HEADERS += \
-    src/plugin/file_editer.h \
+    src/text_file_editor.h \
+    src/text_file_manager.h \
+    src/plugin/plugin_file_editor.h \
+    src/ui/ui_text_file_editor.h \
     settings.h
 
-INCLUDEPATH += ../app/extern
-
-DEPENDPATH += $$INCLUDEPATH
+DEPENDPATH += ../app/src/plugin/plugin_base.h

@@ -1,29 +1,29 @@
-#include "file_holder.h"
+#include "file_manager.h"
 
 #include <QFile>
 #include <QIODevice>
 
 #include "plugin/plugin_manager.h"
 
-FileHolder::~FileHolder() {
+FileManager::~FileManager() {
 }
 
-FileHolder::FileHolder(QObject *parent)
+FileManager::FileManager(QObject *parent)
     : QObject(parent)
     , file_name_() {
 
 }
 
-bool FileHolder::Available() {
+bool FileManager::Available() {
     return !file_name_.isEmpty();
 }
 
-void FileHolder::New() {
+void FileManager::New() {
     Close();
     emit Plugin::Manager::Instance().SignalNew();
 }
 
-bool FileHolder::Open(QString file_name) {
+bool FileManager::Open(QString file_name) {
     QFile file(file_name);
     if (!file.open(QIODevice::ReadOnly)) {
         return false;
@@ -33,21 +33,21 @@ bool FileHolder::Open(QString file_name) {
     return true;
 }
 
-bool FileHolder::Save() {
+bool FileManager::Save() {
     return Save(file_name_);
 }
 
-bool FileHolder::SaveAs(QString file_name) {
+bool FileManager::SaveAs(QString file_name) {
     return Save(file_name);
 }
 
-void FileHolder::Close() {
+void FileManager::Close() {
     file_name_ = QString();
     emit Plugin::Manager::Instance().SignalClose();
 }
 
 
-bool FileHolder::Save(QString file_name) {
+bool FileManager::Save(QString file_name) {
     QFile file(file_name);
     if (!file.open(QIODevice::ReadWrite)) {
         return false;
