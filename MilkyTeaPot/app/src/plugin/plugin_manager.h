@@ -13,10 +13,8 @@
 
 namespace Plugin {
 
-class Manager : public QObject {
+class Manager : public Callbacks {
     Q_OBJECT
-
-    friend class Callbacks;
 
 public:
     static Manager &Instance();
@@ -25,12 +23,22 @@ private:
     static Manager *instance_;
 
 public:
-    Manager(MainWindow *main_window);
-    ~Manager();
+    void SetModified() final;
+    void AddViewAction(QAction *action, QAction *insert_before = nullptr) final;
+    QAction *AddViewMenu(QMenu *menu, QAction *insert_before = nullptr) final;
+    QAction *AddViewSeparator(QAction *insert_before = nullptr) final;
+    void AddToolsAction(QAction *action, QAction *insert_before = nullptr) final;
+    QAction *AddToolsMenu(QMenu *menu, QAction *insert_before = nullptr) final;
+    QAction *AddToolsSeparator(QAction *insert_before = nullptr) final;
+    void AddPreferencesOption(std::function<const QString(QWidget &)> option) final;
+    QMdiSubWindow *AddCentralSubWindow(QWidget *w) final;
 
 public:
-    Callbacks &GetCallbacks();
-    void ForeachOption(std::function<void(const QString *, QWidget *)>);
+    Manager(MainWindow *main_window);
+    ~Manager() override;
+
+public:
+    void ForeachOption(std::function<QWidget *()>, std::function<void(const QString &, QWidget *)>);
 
 private:
     void OnLoad();
@@ -39,22 +47,9 @@ private:
 
 private:
     MainWindow &main_window_;
-    Callbacks callbacks_;
-    QHash<QString, BasePlugin *> plugins_;
+    QHash<QString, AbstractPlugin *> plugins_;
     QHash<QString, QPluginLoader *> loaders_;
-
-private:
-    void SetModified();
-    void AddViewAction(QAction *action, QAction *insert_before);
-    QAction *AddViewMenu(QMenu *menu, QAction *insert_before);
-    QAction *AddViewSeparator(QAction *insert_before);
-    void AddToolsAction(QAction *action, QAction *insert_before);
-    QAction *AddToolsMenu(QMenu *menu, QAction *insert_before);
-    QAction *AddToolsSeparator(QAction *insert_before);
-    void AddPreferencesOption(std::function<std::tuple<const QString *, QWidget *>()> option);
-
-private:
-    QList<std::function<std::tuple<const QString *, QWidget *>()>> options_;
+    QList<std::function<const QString(QWidget &)>> options_;
 
 private:
     Manager(const Manager &) = delete;

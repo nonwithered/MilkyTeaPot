@@ -151,7 +151,7 @@ void MainWindow::CreateActions() {
 }
 
 void MainWindow::CreateMenus() {
-    menu_file = menuBar()->addMenu(tr("&File"));
+    menu_file = ui.menubar->addMenu(tr("&File"));
     menu_file->addAction(action_file_new);
     menu_file->addAction(action_file_open);
     menu_file->addAction(action_file_save);
@@ -160,13 +160,13 @@ void MainWindow::CreateMenus() {
     menu_file->addAction(action_file_close);
     menu_file->addAction(action_file_quit);
 
-    menu_edit = menuBar()->addMenu(tr("&Edit"));
+    menu_edit = ui.menubar->addMenu(tr("&Edit"));
     menu_edit->addAction(action_edit_undo);
     menu_edit->addAction(action_edit_redo);
 
-    menu_view = menuBar()->addMenu(tr("&View"));
+    menu_view = ui.menubar->addMenu(tr("&View"));
 
-    menu_tools = menuBar()->addMenu(tr("&Tools"));
+    menu_tools = ui.menubar->addMenu(tr("&Tools"));
     menu_tool_separator = menu_tools->addSeparator();
     menu_tools->addAction(action_tools_options);
 }
@@ -213,4 +213,6 @@ QAction *MainWindow::AddToolsSeparator(QAction *insert_before) {
     return menu_tools->insertSeparator(insert_before);
 }
 
-
+QMdiSubWindow *MainWindow::AddCentralSubWindow(QWidget *w) {
+    return ui.centralwidget->addSubWindow(w);
+}

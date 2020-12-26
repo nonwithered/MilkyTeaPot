@@ -4,8 +4,6 @@
 
 #include "../../settings.h"
 
-#include <QDebug>
-
 namespace Ui {
 
 void Ui_PreferencesDialog::SetupUi(QDialog *dialog) {

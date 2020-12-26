@@ -45,6 +45,7 @@ public:
     void AddToolsAction(QAction *action, QAction *insert_before);
     QAction *AddToolsMenu(QMenu *menu, QAction *insert_before);
     QAction *AddToolsSeparator(QAction *insert_before);
+    QMdiSubWindow *AddCentralSubWindow(QWidget *w);
 
 private:
     Ui::Ui_MainWindow ui;

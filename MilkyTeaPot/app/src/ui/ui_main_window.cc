@@ -2,7 +2,7 @@
 
 #include <QGuiApplication>
 #include <QScreen>
-#include <QMdiArea>
+#include <QMdiSubWindow>
 
 #include "../../settings.h"
 

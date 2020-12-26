@@ -2,9 +2,10 @@
 #define UI_MAIN_WINDOW_H
 
 #include <QMainWindow>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QWidget>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QWidget>
+#include <QMdiArea>
 
 namespace Ui {
 
@@ -24,7 +25,7 @@ public:
     void SetupUi(QMainWindow *);
 
 public:
-    QWidget *centralwidget;
+    QMdiArea *centralwidget;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 

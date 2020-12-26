@@ -60,7 +60,6 @@ public:
 
 public:
     AbstractPlugin() = default;
-    virtual ~AbstractPlugin() = default;
 
 private:
     AbstractPlugin(const AbstractPlugin &) = delete;

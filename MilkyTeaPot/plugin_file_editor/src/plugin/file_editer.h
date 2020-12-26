@@ -7,11 +7,11 @@
 
 namespace Plugin {
 
-class FileEditor : public QObject, public BasePlugin {
+class FileEditor : public QObject, public AbstractPlugin {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID BasePlugin_iid)
-    Q_INTERFACES(Plugin::BasePlugin)
+    Q_PLUGIN_METADATA(IID AbstractPlugin_iid)
+    Q_INTERFACES(Plugin::AbstractPlugin)
 
 public:
     FileEditor();
@@ -19,7 +19,7 @@ public:
 
 public:
     QString OnLoad(QDir &) final;
-    void OnAttach(QHash<QString, BasePlugin *> &, Callbacks &) final;
+    void OnAttach(QHash<QString, AbstractPlugin *> &, Callbacks *) final;
     void OnUnload() final;
 };
 
