@@ -20,7 +20,10 @@ public:
     static Manager &Instance(MainWindow *main_window = nullptr);
 
 public:
-    void SetModified() final;
+    void EmitModified() final;
+
+public:
+    QJsonObject &GetConfig() final;
     void AddViewAction(QAction *action, QAction *insert_before = nullptr) final;
     QAction *AddViewMenu(QMenu *menu, QAction *insert_before = nullptr) final;
     QAction *AddViewSeparator(QAction *insert_before = nullptr) final;

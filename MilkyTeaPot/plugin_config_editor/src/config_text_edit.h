@@ -2,6 +2,7 @@
 #define CONFIG_TEXT_EDIT_H
 
 #include <QTextEdit>
+#include <QMdiSubWindow>
 
 #include "ui/ui_config_text_edit.h"
 
@@ -12,8 +13,15 @@ public:
     ~ConfigTextEdit();
     ConfigTextEdit(QWidget* parent = nullptr);
 
+public:
+    QMdiSubWindow *SubWindow(QMdiSubWindow *w = nullptr);
+
+public slots:
+    void SetTitleModified();
+
 private:
     Ui::Ui_ConfigTextEdit ui;
+    QMdiSubWindow *sub_window_;
 
 private:
     ConfigTextEdit(const ConfigTextEdit &) = delete;

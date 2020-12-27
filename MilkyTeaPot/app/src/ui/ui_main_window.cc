@@ -13,9 +13,6 @@ void Ui_MainWindow::SetupUi(QMainWindow *main_window) {
         main_window->setObjectName(QString::fromUtf8("Ui_MainWindow"));
     }
 
-    QMetaObject::connectSlotsByName(main_window);
-    main_window->setWindowTitle(QString::fromUtf8(kAppName));
-
     QRect rect = QGuiApplication::screens().at(0)->availableGeometry();
     int width = rect.width() * 3 / 4;
     int height = rect.height() * 3 / 4;
@@ -35,6 +32,9 @@ void Ui_MainWindow::SetupUi(QMainWindow *main_window) {
     statusbar->setObjectName(QString::fromUtf8("statusbar"));
     main_window->setStatusBar(statusbar);
 
+    main_window->setWindowTitle(kAppName);
+
+    QMetaObject::connectSlotsByName(main_window);
 }
 
 } // namespace Ui

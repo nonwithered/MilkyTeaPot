@@ -2,6 +2,7 @@
 #define UI_CONFIG_TEXT_EDIT_H
 
 #include <QTextEdit>
+#include <QMdiSubWindow>
 
 namespace Ui {
 
@@ -19,6 +20,7 @@ private:
 
 public:
     void SetupUi(QTextEdit *);
+    void SetupMdi(QMdiSubWindow *);
 };
 
 } // namespace Ui

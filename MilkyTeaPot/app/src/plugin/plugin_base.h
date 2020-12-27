@@ -9,6 +9,7 @@
 #include <QMenu>
 #include <QWidget>
 #include <QMdiSubWindow>
+#include <QJsonObject>
 
 #include <functional>
 #include <tuple>
@@ -29,9 +30,13 @@ signals:
     void SignalOpen(QFile &);
     void SignalSave(QFile &);
     void SignalClose();
+    void SignalModified();
 
 public:
-    virtual void SetModified() = 0;
+    virtual void EmitModified() = 0;
+
+public:
+    virtual QJsonObject &GetConfig() = 0;
     virtual void AddViewAction(QAction *action, QAction *insert_before = nullptr) = 0;
     virtual QAction *AddViewMenu(QMenu *menu, QAction *insert_before = nullptr) = 0;
     virtual QAction *AddViewSeparator(QAction *insert_before = nullptr) = 0;

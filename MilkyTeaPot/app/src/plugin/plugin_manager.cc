@@ -13,8 +13,13 @@ Manager &Manager::Instance(MainWindow *main_window) {
     return *instance;
 }
 
-void Manager::SetModified() {
-    main_window_.SetModified();
+void Manager::EmitModified() {
+    main_window_.setWindowModified(true);
+    emit SignalModified();
+}
+
+QJsonObject &Manager::GetConfig() {
+    return main_window_.GetConfigManager().GetConfig();
 }
 
 void Manager::AddViewAction(QAction *action, QAction *insert_before) {

@@ -2,8 +2,11 @@
 #define APP_SETTINGS_H
 
 #define kAppName "MilkyTeaPot"
-#define kConfigSuffix ".t.json"
+#define kConfigSuffix ".json"
 
+#define kUntitled "untitled"
+
+#define kWarnOpen " is not a json file"
 #define kWarnMidified "The document has been modified. "
 #define kQuestChanges "Do you want to save your changes? "
 

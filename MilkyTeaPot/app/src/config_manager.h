@@ -2,35 +2,36 @@
 #define CONFIG_MANAGER_H
 
 #include <QObject>
-#include <QFile>
+#include <QString>
+#include <QJsonObject>
 
 class ConfigManager : public QObject {
     Q_OBJECT
 
 public:
-    static ConfigManager &Instance(QObject* parent = nullptr);
-
-public slots:
+    ~ConfigManager();
+    ConfigManager(QObject *parent = nullptr);
+    QJsonObject &GetConfig();
+    bool Available();
     void New();
-    void Open(QFile &);
-    void Save(QFile &);
+    bool Open(QString file_name);
+    bool Save();
+    bool SaveAs(QString file_name);
     void Close();
 
-public:
-    ~ConfigManager();
+private:
+    bool Save(QString file_name);
+    void NewConfig();
 
 private:
-    ConfigManager(QObject* parent);
-
-public:
-    bool TryApply(const QString &);
+    QString file_name_;
+    QJsonObject config_;
 
 private:
     ConfigManager(const ConfigManager &) = delete;
     ConfigManager(ConfigManager &&) = delete;
     ConfigManager &operator=(const ConfigManager &) = delete;
     ConfigManager &operator=(ConfigManager &&) = delete;
-
 };
 
 #endif // CONFIG_MANAGER_H

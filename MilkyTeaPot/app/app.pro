@@ -14,8 +14,8 @@ SOURCES += \
     src/plugin/plugin_manager.cc \
     src/ui/ui_main_window.cc \
     src/ui/ui_preferences_dialog.cc \
-    src/file_manager.cc \
     src/preferences_dialog.cc \
+    src/config_manager.cc \
     src/main_window.cc \
     src/main.cc
 
@@ -24,7 +24,7 @@ HEADERS += \
     src/plugin/plugin_manager.h \
     src/ui/ui_main_window.h \
     src/ui/ui_preferences_dialog.h \
-    src/file_manager.h \
     src/preferences_dialog.h \
+    src/config_manager.h \
     src/main_window.h \
     settings.h

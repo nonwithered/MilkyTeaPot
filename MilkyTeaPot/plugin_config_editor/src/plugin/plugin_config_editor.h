@@ -15,11 +15,11 @@ class ConfigEditor : public QObject, public PluginInterface {
     Q_PLUGIN_METADATA(IID PluginInterface_iid)
     Q_INTERFACES(Plugin::PluginInterface)
 
+public:
+    static ConfigEditor &Instance(ConfigEditor *p = nullptr);
+
 signals:
     void SignalClosedConfigEditor();
-
-public:
-    static ConfigEditor &Instance(ConfigEditor *self = nullptr);
 
 public:
     ~ConfigEditor();
@@ -31,22 +31,26 @@ public:
     void OnUnload() final;
 
 private:
+    void PreferenceRead();
+    void PreferenceWrite();
     void AddViewMenu();
     void AddToolsMenu();
-
-public:
-    bool IsShowingTextEditor();
+    void WarningApplyFailed();
+    bool IsShowing();
 
 private slots:
-    void SetShowGrid(bool);
-    void SetClosedConfigEditor();
+    void SetShow(bool);
+    void SetClosed();
     void ApplyModify();
+    void Refresh();
+    void OnOpen();
+    void OnClose();
 
 private:
     ConfigTextEdit *text_edit_;
-    QMdiSubWindow *sub_window_;
     QAction *action_check_show_editor_;
     QAction *action_apply_modify_;
+    QString load_dir_;
 
 private:
     Callbacks *callbacks_;

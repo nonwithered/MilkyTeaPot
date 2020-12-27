@@ -7,7 +7,7 @@
 #include <QWidget>
 
 #include "ui/ui_main_window.h"
-#include "file_manager.h"
+#include "config_manager.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -21,7 +21,7 @@ private slots:
     void FileQuit();
     void EditUndo();
     void EditRedo();
-    void ToolsOptions();
+    void ToolsPreferences();
 
 public:
     ~MainWindow();
@@ -38,6 +38,7 @@ private:
     void CreateMenus();
 
 public:
+    ConfigManager &GetConfigManager();
     void SetModified();
     void AddViewAction(QAction *action, QAction *insert_before);
     QAction *AddViewMenu(QMenu *menu, QAction *insert_before);
@@ -62,10 +63,10 @@ private:
     QMenu *menu_view;
     QMenu *menu_tools;
     QAction *menu_tool_separator;
-    QAction *action_tools_options;
+    QAction *action_tools_preferences;
 
 private:
-    FileManager *file_manager_;
+    ConfigManager *config_manager_;
 };
 
 #endif // ifndef MAIN_WINDOW_H

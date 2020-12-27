@@ -11,26 +11,34 @@ void MainWindow::FileNew() {
     if (!FileClose()) {
         return;
     }
-    file_manager_->New();
+    config_manager_->New();
+    setWindowTitle(tr("[*]%1 - %2").arg(tr(kUntitled))
+                                   .arg(tr(kAppName)));
 }
 
 bool MainWindow::FileOpen() {
     if (!FileClose()) {
         return false;
     }
-    QString file_name = QFileDialog::getOpenFileName(this, tr("open"), ".", tr("(*" kConfigSuffix ")"));
+    QString file_name = QFileDialog::getOpenFileName(this, tr("open"), ".", tr("Json Files (*" kConfigSuffix ")" ";; All Files (*.*)"));
     if (file_name.isEmpty()) {
         return false;
     }
-    return file_manager_->Open(file_name);
+    if (!config_manager_->Open(file_name)) {
+        QMessageBox::warning(this, tr("Open"), file_name + tr(kWarnOpen));
+        return false;
+    }
+    setWindowTitle(tr("[*]%1 - %2").arg(file_name)
+                                   .arg(tr(kAppName)));
+    return true;
 }
 
 bool MainWindow::FileSave() {
     if (!isWindowModified()) {
         return true;
     }
-    if (file_manager_->Available()) {
-        if (!file_manager_->Save()) {
+    if (config_manager_->Available()) {
+        if (!config_manager_->Save()) {
             return false;
         }
         setWindowModified(false);
@@ -41,22 +49,26 @@ bool MainWindow::FileSave() {
 }
 
 bool MainWindow::FileSaveAs() {
-    QString file_name = QFileDialog::getOpenFileName(this, tr("save as"), ".", tr("(*" kConfigSuffix ")"));
+    QString file_name = QFileDialog::getSaveFileName(this, tr("save as"), ".", tr("Json Files (*" kConfigSuffix ")" ";; All Files (*.*)"));
     if (file_name.isEmpty()) {
         return false;
     }
-    if (!file_manager_->SaveAs(file_name)) {
+    if (!config_manager_->SaveAs(file_name)) {
         return false;
     }
     setWindowModified(false);
+    setWindowTitle(tr("[*]%1 - %2").arg(file_name)
+                                   .arg(tr(kAppName)));
     return true;
 }
 
 bool MainWindow::FileClose() {
     if (!isWindowModified()) {
+        config_manager_->Close();
+        setWindowTitle(kAppName);
         return true;
     }
-    int r = QMessageBox::warning(this, tr("continue"),
+    int r = QMessageBox::question(this, tr("continue"),
                                  tr(kWarnMidified "\n" kQuestChanges),
                                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     switch (r) {
@@ -64,10 +76,12 @@ bool MainWindow::FileClose() {
         if (!FileSave()) {
             return false;
         }
-        file_manager_->Close();
+        config_manager_->Close();
+        setWindowTitle(kAppName);
         return true;
     case QMessageBox::No:
-        file_manager_->Close();
+        config_manager_->Close();
+        setWindowTitle(kAppName);
         return true;
     default:
         return false;
@@ -89,7 +103,7 @@ void MainWindow::EditRedo() {
 
 }
 
-void MainWindow::ToolsOptions() {
+void MainWindow::ToolsPreferences() {
     QDialog *dialog = new PreferencesDialog;
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->exec();
@@ -100,7 +114,7 @@ MainWindow::~MainWindow() {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , file_manager_(new FileManager(this)) {
+    , config_manager_(new ConfigManager(this)) {
     ui.SetupUi(this);
     CreateActions();
     CreateMenus();
@@ -147,9 +161,9 @@ void MainWindow::CreateActions() {
     action_edit_redo->setStatusTip(tr("redo"));
     connect(action_edit_redo, SIGNAL(triggered()), this, SLOT(EditRedo()));
 
-    action_tools_options = new QAction(tr("&Options"), this);
-    action_tools_options->setStatusTip(tr("options"));
-    connect(action_tools_options, SIGNAL(triggered()), this, SLOT(ToolsOptions()));
+    action_tools_preferences = new QAction(tr("&Preferences"), this);
+    action_tools_preferences->setStatusTip(tr("preferences"));
+    connect(action_tools_preferences, SIGNAL(triggered()), this, SLOT(ToolsPreferences()));
 }
 
 void MainWindow::CreateMenus() {
@@ -170,7 +184,11 @@ void MainWindow::CreateMenus() {
 
     menu_tools = ui.menubar->addMenu(tr("&Tools"));
     menu_tool_separator = menu_tools->addSeparator();
-    menu_tools->addAction(action_tools_options);
+    menu_tools->addAction(action_tools_preferences);
+}
+
+ConfigManager &MainWindow::GetConfigManager() {
+    return *config_manager_;
 }
 
 void MainWindow::SetModified() {
