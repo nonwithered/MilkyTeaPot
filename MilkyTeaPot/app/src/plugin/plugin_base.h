@@ -40,6 +40,7 @@ public:
     virtual QAction *AddToolsSeparator(QAction *insert_before = nullptr) = 0;
     virtual void AddPreferencesOption(std::function<std::tuple<const QString, QWidget *>()> option) = 0;
     virtual QMdiSubWindow *AddCentralSubWindow(QWidget *w) = 0;
+    virtual QWidget *GetMainWindow() = 0;
 
 public:
     ~Callbacks();

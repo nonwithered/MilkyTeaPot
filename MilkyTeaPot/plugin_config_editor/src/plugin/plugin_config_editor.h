@@ -1,28 +1,29 @@
-#ifndef PLUGIN_FILE_EDITER_H
-#define PLUGIN_FILE_EDITER_H
+#ifndef PLUGIN_CONFIG_EDITER_H
+#define PLUGIN_CONFIG_EDITER_H
 
 #include <QObject>
 #include <QAction>
 
 #include "../app/src/plugin/plugin_base.h"
+#include "../config_text_edit.h"
 
 namespace Plugin {
 
-class FileEditor : public QObject, public PluginInterface {
+class ConfigEditor : public QObject, public PluginInterface {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID PluginInterface_iid)
     Q_INTERFACES(Plugin::PluginInterface)
 
 signals:
-    void SignalClosedTextEditor();
+    void SignalClosedConfigEditor();
 
 public:
-    static FileEditor &Instance(FileEditor *self = nullptr);
+    static ConfigEditor &Instance(ConfigEditor *self = nullptr);
 
 public:
-    ~FileEditor();
-    FileEditor();
+    ~ConfigEditor();
+    ConfigEditor();
 
 public:
     QString OnLoad(QDir &) final;
@@ -31,17 +32,21 @@ public:
 
 private:
     void AddViewMenu();
+    void AddToolsMenu();
 
 public:
     bool IsShowingTextEditor();
 
 private slots:
     void SetShowGrid(bool);
-    void SetClosedTextEditor();
+    void SetClosedConfigEditor();
+    void ApplyModify();
 
 private:
-    QMdiSubWindow *text_editor_;
+    ConfigTextEdit *text_edit_;
+    QMdiSubWindow *sub_window_;
     QAction *action_check_show_editor_;
+    QAction *action_apply_modify_;
 
 private:
     Callbacks *callbacks_;
@@ -49,4 +54,4 @@ private:
 
 } // namespace Plugin
 
-#endif // PLUGIN_FILE_EDITER_H
+#endif // PLUGIN_CONFIG_EDITER_H

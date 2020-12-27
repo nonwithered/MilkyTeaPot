@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS = \
-          plugin_file_editor \
+          plugin_config_editor \
           app

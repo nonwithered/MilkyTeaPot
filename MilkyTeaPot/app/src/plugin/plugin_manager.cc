@@ -49,6 +49,10 @@ QMdiSubWindow *Manager::AddCentralSubWindow(QWidget *w) {
     return main_window_.AddCentralSubWindow(w);
 }
 
+QWidget *Manager::GetMainWindow() {
+    return &main_window_;
+}
+
 Manager::~Manager() {
     OnUnload();
 }

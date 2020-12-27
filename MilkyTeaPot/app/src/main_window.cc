@@ -18,7 +18,7 @@ bool MainWindow::FileOpen() {
     if (!FileClose()) {
         return false;
     }
-    QString file_name = QFileDialog::getOpenFileName(this, tr("open"), ".", tr("(*.*)"));
+    QString file_name = QFileDialog::getOpenFileName(this, tr("open"), ".", tr("(*" kConfigSuffix ")"));
     if (file_name.isEmpty()) {
         return false;
     }
@@ -41,7 +41,7 @@ bool MainWindow::FileSave() {
 }
 
 bool MainWindow::FileSaveAs() {
-    QString file_name = QFileDialog::getOpenFileName(this, tr("save as"), ".", tr("(*.*)"));
+    QString file_name = QFileDialog::getOpenFileName(this, tr("save as"), ".", tr("(*" kConfigSuffix ")"));
     if (file_name.isEmpty()) {
         return false;
     }

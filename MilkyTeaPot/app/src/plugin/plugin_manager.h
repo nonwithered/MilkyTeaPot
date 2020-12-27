@@ -29,6 +29,7 @@ public:
     QAction *AddToolsSeparator(QAction *insert_before = nullptr) final;
     void AddPreferencesOption(std::function<std::tuple<const QString, QWidget *>()> option) final;
     QMdiSubWindow *AddCentralSubWindow(QWidget *w) final;
+    QWidget *GetMainWindow() final;
 
 public:
     ~Manager();
