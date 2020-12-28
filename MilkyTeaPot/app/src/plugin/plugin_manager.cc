@@ -81,6 +81,7 @@ void Manager::OnLoad() {
         QPluginLoader *loader = new QPluginLoader(instancen_dir.absoluteFilePath(instance_name));
         if (!loader->load()) {
             delete loader;
+            continue;
         }
         PluginInterface *instance = qobject_cast<PluginInterface *>(loader->instance());
         QString key = instance->OnLoad(instancen_dir);

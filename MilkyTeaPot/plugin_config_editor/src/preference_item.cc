@@ -27,30 +27,32 @@ PreferenceItem::PreferenceItem(QObject *parent)
 
 void PreferenceItem::Ensure() {
     QRect rect = QGuiApplication::screens().at(0)->availableGeometry();
+    int w = rect.width();
+    int h = rect.height();
     if (position_x < 0) {
         position_x = 0;
-    } else if (position_x >= rect.width()) {
-        position_x = rect.width() - 1;
+    } else if (position_x >= w) {
+        position_x = w - 1;
     }
     if (position_y < 0) {
         position_y = 0;
-    } else if (position_y >= rect.height()) {
-        position_y = rect.height() - 1;
+    } else if (position_y >= h) {
+        position_y = h - 1;
     }
     if (width < 1) {
         width = 1;
-    } else if (width > rect.width() - position_x) {
-        width = rect.width() - position_x;
+    } else if (width > w - position_x) {
+        width = w - position_x;
     }
     if (height < 1) {
         height = 1;
-    } else if (height > rect.height() - position_y) {
-        height = rect.height() - position_y;
+    } else if (height > h - position_y) {
+        height = h - position_y;
     }
     if (font_size < 1) {
         font_size = 1;
-    } else if (height > kMaxFontSize) {
-        height = kMaxFontSize;
+    } else if (font_size > kMaxFontSize) {
+        font_size = kMaxFontSize;
     }
     emit Modified();
 }

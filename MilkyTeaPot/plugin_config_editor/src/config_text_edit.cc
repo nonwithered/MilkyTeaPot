@@ -12,6 +12,7 @@ ConfigTextEdit::ConfigTextEdit(QWidget* parent)
     , sub_window_(nullptr) {
     ui.SetupUi(this);
     connect(this, SIGNAL(textChanged()), this, SLOT(SetTitleModified()));
+    connect(&PreferenceItem::Instance(), SIGNAL(Modified()), this, SLOT(OnOptionModified()));
 }
 
 QMdiSubWindow *ConfigTextEdit::SubWindow(QMdiSubWindow *w) {
