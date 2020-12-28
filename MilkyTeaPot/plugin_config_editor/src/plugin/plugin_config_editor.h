@@ -19,7 +19,7 @@ public:
     static ConfigEditor &Instance(ConfigEditor *p = nullptr);
 
 signals:
-    void SignalClosedConfigEditor();
+    void SignalShowConfigEditor(bool);
 
 public:
     ~ConfigEditor();
@@ -35,12 +35,12 @@ private:
     void PreferenceWrite();
     void AddViewMenu();
     void AddToolsMenu();
+    void AddPreferenceOption();
     void WarningApplyFailed();
     bool IsShowing();
 
 private slots:
     void SetShow(bool);
-    void SetClosed();
     void ApplyModify();
     void Refresh();
     void OnOpen();

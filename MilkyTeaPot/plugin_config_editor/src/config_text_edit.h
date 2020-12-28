@@ -19,6 +19,9 @@ public:
 public slots:
     void SetTitleModified();
 
+private slots:
+    void OnOptionModified();
+
 private:
     Ui::Ui_ConfigTextEdit ui;
     QMdiSubWindow *sub_window_;

@@ -4,7 +4,7 @@
 #include "preference_item.h"
 
 ConfigTextEdit::~ConfigTextEdit() {
-    emit Plugin::ConfigEditor::Instance().SignalClosedConfigEditor();
+    emit Plugin::ConfigEditor::Instance().SignalShowConfigEditor(false);
 }
 
 ConfigTextEdit::ConfigTextEdit(QWidget* parent)
@@ -24,4 +24,16 @@ QMdiSubWindow *ConfigTextEdit::SubWindow(QMdiSubWindow *w) {
 
 void ConfigTextEdit::SetTitleModified() {
     setWindowModified(true);
+}
+
+void ConfigTextEdit::OnOptionModified() {
+    if (!PreferenceItem::Instance().show_editor) {
+        close();
+        return;
+    }
+    setFont(QFont(PreferenceItem::Instance().font_family, PreferenceItem::Instance().font_size));
+    if (sub_window_ != nullptr) {
+        sub_window_->resize(PreferenceItem::Instance().width, PreferenceItem::Instance().height);
+        sub_window_->move(PreferenceItem::Instance().position_x, PreferenceItem::Instance().position_y);
+    }
 }

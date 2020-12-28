@@ -17,8 +17,7 @@ void Ui_MainWindow::SetupUi(QMainWindow *main_window) {
     int width = rect.width() * 3 / 4;
     int height = rect.height() * 3 / 4;
     main_window->resize(width, height);
-
-    main_window->move(0, 0);
+    main_window->setWindowState(main_window->windowState() | Qt::WindowMaximized);
 
     centralwidget = new QMdiArea(main_window);
     centralwidget->setObjectName(QString::fromUtf8("centralwidget"));

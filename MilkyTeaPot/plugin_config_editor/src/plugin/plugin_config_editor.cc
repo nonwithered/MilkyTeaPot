@@ -7,6 +7,7 @@
 
 #include "../../settings.h"
 #include "../config_text_edit.h"
+#include "../preference_editer.h"
 #include "../preference_item.h"
 
 namespace Plugin {
@@ -40,9 +41,10 @@ void ConfigEditor::OnAttach(const QHash<QString, PluginInterface *> &, Callbacks
     connect(callbacks_, SIGNAL(SignalOpen(QFile &)), this, SLOT(OnOpen()));
     connect(callbacks_, SIGNAL(SignalClose()), this, SLOT(OnClose()));
     connect(callbacks_, SIGNAL(SignalQuit()), this, SLOT(OnQuit()));
-    connect(this, SIGNAL(SignalClosedConfigEditor()), this, SLOT(SetClosed()));
+    connect(this, SIGNAL(SignalShowConfigEditor(bool)), this, SLOT(SetShow(bool)));
     AddViewMenu();
     AddToolsMenu();
+    AddPreferenceOption();
 }
 
 void ConfigEditor::OnUnload() {
@@ -106,6 +108,12 @@ void ConfigEditor::AddToolsMenu() {
     callbacks_->AddToolsAction(action_apply_modify_);
 }
 
+void ConfigEditor::AddPreferenceOption() {
+    callbacks_->AddPreferencesOption([] () -> std::tuple<const QString, QWidget *> {
+                                         return std::make_tuple(tr(kPluginName), new PreferenceEditor);
+                                     });
+}
+
 void ConfigEditor::WarningApplyFailed() {
     QMessageBox::warning(callbacks_->GetMainWindow(), tr(kApplyModify), tr(kMsgApplyFailed));
 }
@@ -130,17 +138,21 @@ void ConfigEditor::SetShow(bool b) {
         text_edit_ = new ConfigTextEdit;
         text_edit_->setAttribute(Qt::WA_DeleteOnClose);
         text_edit_->SubWindow(callbacks_->AddCentralSubWindow(text_edit_));
-        text_edit_->SubWindow()->show();
+        if (action_check_show_editor_->isEnabled()) {
+            text_edit_->SubWindow()->show();
+        }
         Refresh();
         text_edit_->setWindowModified(false);
+        if (!action_check_show_editor_->isChecked()) {
+            action_check_show_editor_->setChecked(true);
+        }
     } else {
         text_edit_->SubWindow()->close();
+        if (IsShowing()) {
+            text_edit_ = nullptr;
+            action_check_show_editor_->setChecked(false);
+        }
     }
-}
-
-void ConfigEditor::SetClosed() {
-    text_edit_ = nullptr;
-    action_check_show_editor_->setChecked(false);
 }
 
 void ConfigEditor::ApplyModify() {

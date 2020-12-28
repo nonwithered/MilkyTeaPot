@@ -4,11 +4,16 @@
 #include <QObject>
 #include <QJsonObject>
 
+#define KEY_OF(k) QString::fromUtf8(#k)
+
 class PreferenceItem : public QObject {
     Q_OBJECT
 
 public:
     static PreferenceItem &Instance(QObject *parent = nullptr);
+
+signals:
+    void Modified();
 
 public:
     virtual ~PreferenceItem();
@@ -17,17 +22,18 @@ private:
     PreferenceItem(QObject *parent = nullptr);
 
 public:
+    void Ensure();
     void FromJson(QJsonObject);
     QJsonObject ToJson();
 
 public:
-    bool show_editor;
-    QString font_family;
-    int font_size;
-    int width;
-    int height;
     int position_x;
     int position_y;
+    int width;
+    int height;
+    QString font_family;
+    int font_size;
+    bool show_editor;
 
 private:
     PreferenceItem(const PreferenceItem &) = delete;

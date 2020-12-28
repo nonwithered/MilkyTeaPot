@@ -1,17 +1,10 @@
 #include "preference_item.h"
 
+#include <QScreen>
 #include <QApplication>
 #include <QFont>
 
 #include "settings.h"
-
-#define KEY_SHOW_EDITOR "show_editor"
-#define KEY_WIDTH "width"
-#define KEY_HEIGHT "height"
-#define KEY_POSITION_X "position_x"
-#define KEY_POSITION_Y "position_y"
-#define KEY_FONT_FAMILY "font_family"
-#define KEY_FONT_SIZE "font_size"
 
 PreferenceItem &PreferenceItem::Instance(QObject *parent) {
     static PreferenceItem *instance = new PreferenceItem(parent);
@@ -32,46 +25,77 @@ PreferenceItem::PreferenceItem(QObject *parent)
     font_size = qApp->font().pointSize();
 }
 
+void PreferenceItem::Ensure() {
+    QRect rect = QGuiApplication::screens().at(0)->availableGeometry();
+    if (position_x < 0) {
+        position_x = 0;
+    } else if (position_x >= rect.width()) {
+        position_x = rect.width() - 1;
+    }
+    if (position_y < 0) {
+        position_y = 0;
+    } else if (position_y >= rect.height()) {
+        position_y = rect.height() - 1;
+    }
+    if (width < 1) {
+        width = 1;
+    } else if (width > rect.width() - position_x) {
+        width = rect.width() - position_x;
+    }
+    if (height < 1) {
+        height = 1;
+    } else if (height > rect.height() - position_y) {
+        height = rect.height() - position_y;
+    }
+    if (font_size < 1) {
+        font_size = 1;
+    } else if (height > kMaxFontSize) {
+        height = kMaxFontSize;
+    }
+    emit Modified();
+}
+
 void PreferenceItem::FromJson(QJsonObject json) {
     QJsonValue v;
-    v = json.value(KEY_SHOW_EDITOR);
-    if (v.isBool()) {
-        show_editor = v.toBool();
-    }
-    v = json.value(KEY_WIDTH);
-    if (v.isDouble()) {
-        width = v.toInt();
-    }
-    v = json.value(KEY_HEIGHT);
-    if (v.isDouble()) {
-        height = v.toInt();
-    }
-    v = json.value(KEY_POSITION_X);
+    v = json.value(KEY_OF(position_x));
     if (v.isDouble()) {
         position_x = v.toInt();
     }
-    v = json.value(KEY_POSITION_Y);
+    v = json.value(KEY_OF(position_y));
     if (v.isDouble()) {
         position_y = v.toInt();
     }
-    v = json.value(KEY_FONT_FAMILY);
+    v = json.value(KEY_OF(width));
+    if (v.isDouble()) {
+        width = v.toInt();
+    }
+    v = json.value(KEY_OF(height));
+    if (v.isDouble()) {
+        height = v.toInt();
+    }
+    v = json.value(KEY_OF(font_family));
     if (v.isString()) {
         font_family = v.toString();
     }
-    v = json.value(KEY_FONT_SIZE);
+    v = json.value(KEY_OF(font_size));
     if (v.isDouble()) {
         font_size = v.toInt();
     }
+    v = json.value(KEY_OF(show_editor));
+    if (v.isBool()) {
+        show_editor = v.toBool();
+    }
+    Ensure();
 }
 
 QJsonObject PreferenceItem::ToJson() {
     QJsonObject json;
-    json.insert(KEY_SHOW_EDITOR, show_editor);
-    json.insert(KEY_WIDTH, width);
-    json.insert(KEY_HEIGHT, height);
-    json.insert(KEY_POSITION_X, position_x);
-    json.insert(KEY_POSITION_Y, position_y);
-    json.insert(KEY_FONT_FAMILY, font_family);
-    json.insert(KEY_FONT_SIZE, font_size);
+    json.insert(KEY_OF(position_x), position_x);
+    json.insert(KEY_OF(position_y), position_y);
+    json.insert(KEY_OF(width), width);
+    json.insert(KEY_OF(height), height);
+    json.insert(KEY_OF(font_family), font_family);
+    json.insert(KEY_OF(font_size), font_size);
+    json.insert(KEY_OF(show_editor), show_editor);
     return json;
 }
