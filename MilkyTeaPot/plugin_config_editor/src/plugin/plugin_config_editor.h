@@ -45,12 +45,14 @@ private slots:
     void Refresh();
     void OnOpen();
     void OnClose();
+    void OnQuit();
 
 private:
     ConfigTextEdit *text_edit_;
     QAction *action_check_show_editor_;
     QAction *action_apply_modify_;
     QString load_dir_;
+    bool quitted_;
 
 private:
     Callbacks *callbacks_;

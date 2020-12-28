@@ -23,6 +23,9 @@ private slots:
     void EditRedo();
     void ToolsPreferences();
 
+protected:
+    void closeEvent(QCloseEvent *) override;
+
 public:
     ~MainWindow();
     MainWindow(QWidget *parent = nullptr);

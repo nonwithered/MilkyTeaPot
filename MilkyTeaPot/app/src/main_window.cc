@@ -14,6 +14,7 @@ void MainWindow::FileNew() {
     config_manager_->New();
     setWindowTitle(tr("[*]%1 - %2").arg(tr(kUntitled))
                                    .arg(tr(kAppName)));
+    action_file_close->setEnabled(true);
 }
 
 bool MainWindow::FileOpen() {
@@ -30,6 +31,7 @@ bool MainWindow::FileOpen() {
     }
     setWindowTitle(tr("[*]%1 - %2").arg(file_name)
                                    .arg(tr(kAppName)));
+    action_file_close->setEnabled(true);
     return true;
 }
 
@@ -64,8 +66,11 @@ bool MainWindow::FileSaveAs() {
 
 bool MainWindow::FileClose() {
     if (!isWindowModified()) {
-        config_manager_->Close();
-        setWindowTitle(kAppName);
+        if (action_file_close->isEnabled()) {
+            config_manager_->Close();
+            setWindowTitle(kAppName);
+            action_file_close->setEnabled(false);
+        }
         return true;
     }
     int r = QMessageBox::question(this, tr("continue"),
@@ -78,10 +83,12 @@ bool MainWindow::FileClose() {
         }
         config_manager_->Close();
         setWindowTitle(kAppName);
+        action_file_close->setEnabled(false);
         return true;
     case QMessageBox::No:
         config_manager_->Close();
         setWindowTitle(kAppName);
+        action_file_close->setEnabled(false);
         return true;
     default:
         return false;
@@ -107,6 +114,11 @@ void MainWindow::ToolsPreferences() {
     QDialog *dialog = new PreferencesDialog;
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->exec();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    config_manager_->Quit();
+    QMainWindow::closeEvent(event);
 }
 
 MainWindow::~MainWindow() {
@@ -142,6 +154,7 @@ void MainWindow::CreateActions() {
     connect(action_file_save_as, SIGNAL(triggered()), this, SLOT(FileSaveAs()));
 
     action_file_close = new QAction(tr("&Close"), this);
+    action_file_close->setEnabled(false);
     action_file_close->setShortcut(QKeySequence::Close);
     action_file_close->setStatusTip(tr("close file"));
     connect(action_file_close, SIGNAL(triggered()), this, SLOT(FileClose()));

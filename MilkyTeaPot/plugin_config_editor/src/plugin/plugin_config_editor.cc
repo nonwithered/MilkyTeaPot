@@ -22,7 +22,8 @@ ConfigEditor::~ConfigEditor() {
 ConfigEditor::ConfigEditor()
     : QObject()
     , PluginInterface()
-    , text_edit_(nullptr) {
+    , text_edit_(nullptr),
+    quitted_(false) {
     Instance(this);
 }
 
@@ -38,6 +39,7 @@ void ConfigEditor::OnAttach(const QHash<QString, PluginInterface *> &, Callbacks
     connect(callbacks_, SIGNAL(SignalNew()), this, SLOT(OnOpen()));
     connect(callbacks_, SIGNAL(SignalOpen(QFile &)), this, SLOT(OnOpen()));
     connect(callbacks_, SIGNAL(SignalClose()), this, SLOT(OnClose()));
+    connect(callbacks_, SIGNAL(SignalQuit()), this, SLOT(OnQuit()));
     connect(this, SIGNAL(SignalClosedConfigEditor()), this, SLOT(SetClosed()));
     AddViewMenu();
     AddToolsMenu();
@@ -114,15 +116,23 @@ bool ConfigEditor::IsShowing() {
 
 void ConfigEditor::SetShow(bool b) {
     if (b == IsShowing()) {
+        if (!b) {
+            if (!quitted_) {
+                PreferenceItem::Instance().show_editor = false;
+                action_apply_modify_->setEnabled(false);
+            }
+        }
         return;
     }
     if (b) {
+        PreferenceItem::Instance().show_editor = true;
         action_apply_modify_->setEnabled(true);
         text_edit_ = new ConfigTextEdit;
         text_edit_->setAttribute(Qt::WA_DeleteOnClose);
         text_edit_->SubWindow(callbacks_->AddCentralSubWindow(text_edit_));
         text_edit_->SubWindow()->show();
         Refresh();
+        text_edit_->setWindowModified(false);
     } else {
         text_edit_->SubWindow()->close();
     }
@@ -131,7 +141,6 @@ void ConfigEditor::SetShow(bool b) {
 void ConfigEditor::SetClosed() {
     text_edit_ = nullptr;
     action_check_show_editor_->setChecked(false);
-    action_apply_modify_->setEnabled(false);
 }
 
 void ConfigEditor::ApplyModify() {
@@ -162,17 +171,22 @@ void ConfigEditor::OnOpen() {
     if (IsShowing()) {
         text_edit_->SubWindow()->show();
         Refresh();
+        text_edit_->setWindowModified(false);
         action_apply_modify_->setEnabled(true);
     }
 }
 
 void ConfigEditor::OnClose() {
     action_check_show_editor_->setEnabled(false);
-    action_apply_modify_->setEnabled(false);
     if (IsShowing()) {
         text_edit_->SubWindow()->hide();
         text_edit_->setText(QString());
+        action_apply_modify_->setEnabled(false);
     }
+}
+
+void ConfigEditor::OnQuit() {
+    quitted_ = true;
 }
 
 } // namespace Plugin

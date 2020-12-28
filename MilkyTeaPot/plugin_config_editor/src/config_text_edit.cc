@@ -1,6 +1,7 @@
 #include "config_text_edit.h"
 
 #include "plugin/plugin_config_editor.h"
+#include "preference_item.h"
 
 ConfigTextEdit::~ConfigTextEdit() {
     emit Plugin::ConfigEditor::Instance().SignalClosedConfigEditor();

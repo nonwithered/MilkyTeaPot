@@ -30,6 +30,7 @@ signals:
     void SignalOpen(QFile &);
     void SignalSave(QFile &);
     void SignalClose();
+    void SignalQuit();
     void SignalModified();
 
 public:

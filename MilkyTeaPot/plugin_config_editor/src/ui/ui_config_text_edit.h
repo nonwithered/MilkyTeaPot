@@ -6,6 +6,13 @@
 
 namespace Ui {
 
+class MdiEventFilter : public QObject {
+    Q_OBJECT
+
+public:
+    bool eventFilter(QObject *watched, QEvent *event) final;
+};
+
 class Ui_ConfigTextEdit {
 
 public:
@@ -21,6 +28,9 @@ private:
 public:
     void SetupUi(QTextEdit *);
     void SetupMdi(QMdiSubWindow *);
+
+private:
+     MdiEventFilter mdi_event_filter_;
 };
 
 } // namespace Ui

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QJsonObject>
+#include <QCloseEvent>
 
 class ConfigManager : public QObject {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
     bool Save();
     bool SaveAs(QString file_name);
     void Close();
+    void Quit();
 
 private:
     bool Save(QString file_name);

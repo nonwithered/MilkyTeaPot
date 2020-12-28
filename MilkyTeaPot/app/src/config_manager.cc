@@ -23,7 +23,6 @@ bool ConfigManager::Available() {
 }
 
 void ConfigManager::New() {
-    Close();
     NewConfig();
     emit Plugin::Manager::Instance().SignalNew();
 }
@@ -56,6 +55,10 @@ void ConfigManager::Close() {
     file_name_ = QString();
     config_ = QJsonObject();
     emit Plugin::Manager::Instance().SignalClose();
+}
+
+void ConfigManager::Quit() {
+    emit Plugin::Manager::Instance().SignalQuit();
 }
 
 bool ConfigManager::Save(QString file_name) {
