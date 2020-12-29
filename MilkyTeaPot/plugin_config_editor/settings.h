@@ -15,6 +15,7 @@
 constexpr int kDefaultWidth = 256;
 constexpr int kDefaultHeight = 512;
 
-constexpr int kMaxFontSize = 128;
+constexpr int kDefaultFontSize = 16;
+constexpr int kMaxFontSize = 64;
 
 #endif // ifndef PLUGIN_CONFIG_EDITOR_SETTINGS_H

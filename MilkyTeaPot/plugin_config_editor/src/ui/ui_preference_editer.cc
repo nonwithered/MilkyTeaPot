@@ -27,6 +27,10 @@ Ui_PreferenceEditor::Ui_PreferenceEditor() {
     foreach (const QString &f, QFontDatabase().families()) {
         font_family->addItem(f);
     }
+    int index = font_family->findText(PreferenceItem::Instance().font_family);
+    if (index >= 0) {
+        font_family->setCurrentIndex(index);
+    }
     font_size = new QSpinBox;
     font_size->setRange(1, 99);
     show_editor = new QCheckBox(KEY_OF(show_editor));

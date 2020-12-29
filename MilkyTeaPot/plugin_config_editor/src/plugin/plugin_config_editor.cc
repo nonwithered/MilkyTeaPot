@@ -147,9 +147,11 @@ void ConfigEditor::SetShow(bool b) {
             action_check_show_editor_->setChecked(true);
         }
     } else {
-        text_edit_->SubWindow()->close();
-        if (IsShowing()) {
-            text_edit_ = nullptr;
+        QMdiSubWindow *sub_window = text_edit_->SubWindow();
+        text_edit_ = nullptr;
+        if (sub_window->isVisible()) {
+            sub_window->close();
+        } else {
             action_check_show_editor_->setChecked(false);
         }
     }

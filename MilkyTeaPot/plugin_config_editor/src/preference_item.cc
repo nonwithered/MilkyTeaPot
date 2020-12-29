@@ -22,7 +22,7 @@ PreferenceItem::PreferenceItem(QObject *parent)
     position_x = 0;
     position_y = 0;
     font_family = qApp->font().family();
-    font_size = qApp->font().pointSize();
+    font_size = kDefaultFontSize;
 }
 
 void PreferenceItem::Ensure() {
