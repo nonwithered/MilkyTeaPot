@@ -12,22 +12,12 @@ namespace Ui {
 class Ui_MainWindow {
 
 public:
-    ~Ui_MainWindow() = default;
-    Ui_MainWindow() = default;
-
-public:
     void SetupUi(QMainWindow *);
 
 public:
     QMdiArea *centralwidget;
     QMenuBar *menubar;
     QStatusBar *statusbar;
-
-private:
-    Ui_MainWindow(const Ui_MainWindow &) = delete;
-    Ui_MainWindow(Ui_MainWindow &&) = delete;
-    Ui_MainWindow &operator=(const Ui_MainWindow &) = delete;
-    Ui_MainWindow &operator=(Ui_MainWindow &&) = delete;
 
 };
 

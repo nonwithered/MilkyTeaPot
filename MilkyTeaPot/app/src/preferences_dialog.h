@@ -13,12 +13,6 @@ public:
     PreferencesDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
 private:
-    PreferencesDialog(const PreferencesDialog &) = delete;
-    PreferencesDialog(PreferencesDialog &&) = delete;
-    PreferencesDialog &operator=(const PreferencesDialog &) = delete;
-    PreferencesDialog &operator=(PreferencesDialog &&) = delete;
-
-private:
     Ui::Ui_PreferencesDialog ui;
 
 };

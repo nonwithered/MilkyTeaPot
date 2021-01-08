@@ -53,12 +53,6 @@ private:
     QHash<QString, PluginInterface *> plugins_;
     QHash<QString, QPluginLoader *> loaders_;
     QList<std::function<std::tuple<const QString, QWidget *>()>> options_;
-
-private:
-    Manager(const Manager &) = delete;
-    Manager(Manager &&) = delete;
-    Manager &operator=(const Manager &) = delete;
-    Manager &operator=(Manager &&) = delete;
 };
 
 } // namespace Plugin

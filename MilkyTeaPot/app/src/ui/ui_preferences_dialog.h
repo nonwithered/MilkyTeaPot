@@ -10,21 +10,11 @@ namespace Ui {
 class Ui_PreferencesDialog {
 
 public:
-    ~Ui_PreferencesDialog() = default;
-    Ui_PreferencesDialog() = default;
-
-public:
     void SetupUi(QDialog *);
 
 public:
     QListWidget *list_widget;
     QStackedLayout *stacked_layout;
-
-private:
-    Ui_PreferencesDialog(const Ui_PreferencesDialog &) = delete;
-    Ui_PreferencesDialog(Ui_PreferencesDialog &&) = delete;
-    Ui_PreferencesDialog &operator=(const Ui_PreferencesDialog &) = delete;
-    Ui_PreferencesDialog &operator=(Ui_PreferencesDialog &&) = delete;
 };
 
 } // namespace Ui

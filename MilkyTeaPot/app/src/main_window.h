@@ -31,12 +31,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
 
 private:
-    MainWindow(const MainWindow &) = delete;
-    MainWindow(MainWindow &&) = delete;
-    MainWindow &operator=(const MainWindow &) = delete;
-    MainWindow &operator=(MainWindow &&) = delete;
-
-private:
     void CreateActions();
     void CreateMenus();
 

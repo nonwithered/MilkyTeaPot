@@ -16,21 +16,11 @@ public:
 class Ui_ConfigTextEdit {
 
 public:
-    ~Ui_ConfigTextEdit() = default;
-    Ui_ConfigTextEdit() = default;
-
-public:
     void SetupUi(QTextEdit *);
     void SetupMdi(QMdiSubWindow *);
 
 private:
      MdiEventFilter mdi_event_filter_;
-
-private:
-    Ui_ConfigTextEdit(const Ui_ConfigTextEdit &) = delete;
-    Ui_ConfigTextEdit(Ui_ConfigTextEdit &&) = delete;
-    Ui_ConfigTextEdit &operator=(const Ui_ConfigTextEdit &) = delete;
-    Ui_ConfigTextEdit &operator=(Ui_ConfigTextEdit &&) = delete;
 };
 
 } // namespace Ui

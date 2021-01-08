@@ -12,7 +12,6 @@ namespace Ui {
 class Ui_PreferenceEditor {
 
 public:
-    ~Ui_PreferenceEditor() = default;
     Ui_PreferenceEditor();
 
 public:
@@ -27,12 +26,6 @@ public:
     QSpinBox *font_size;
     QCheckBox *show_editor;
     QPushButton *apply;
-
-private:
-    Ui_PreferenceEditor(const Ui_PreferenceEditor &) = delete;
-    Ui_PreferenceEditor(Ui_PreferenceEditor &&) = delete;
-    Ui_PreferenceEditor &operator=(const Ui_PreferenceEditor &) = delete;
-    Ui_PreferenceEditor &operator=(Ui_PreferenceEditor &&) = delete;
 
 };
 

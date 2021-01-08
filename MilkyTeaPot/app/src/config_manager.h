@@ -28,12 +28,6 @@ private:
 private:
     QString file_name_;
     QJsonObject config_;
-
-private:
-    ConfigManager(const ConfigManager &) = delete;
-    ConfigManager(ConfigManager &&) = delete;
-    ConfigManager &operator=(const ConfigManager &) = delete;
-    ConfigManager &operator=(ConfigManager &&) = delete;
 };
 
 #endif // CONFIG_MANAGER_H

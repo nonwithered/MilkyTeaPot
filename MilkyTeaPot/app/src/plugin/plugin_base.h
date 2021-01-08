@@ -51,12 +51,6 @@ public:
 public:
     ~Callbacks();
     Callbacks(QObject *parent = nullptr);
-
-private:
-    Callbacks(const Callbacks &) = delete;
-    Callbacks(Callbacks &&) = delete;
-    Callbacks &operator=(const Callbacks &) = delete;
-    Callbacks &operator=(Callbacks &&) = delete;
 };
 
 class PluginInterface {
